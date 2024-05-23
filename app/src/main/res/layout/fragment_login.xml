@@ -6,12 +6,17 @@
     android:background="@color/colorBackground"
     android:padding="16dp">
 
+    <!-- Spacer to lower all elements on the screen -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
     <ImageView
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/logo"
         android:layout_gravity="center_horizontal"
-        android:contentDescription="@string/app_logo" />
+        android:contentDescription="@string/app_logo"
+        android:src="@drawable/logo" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -22,14 +27,32 @@
         android:layout_marginTop="32dp"
         android:layout_gravity="center_horizontal" />
 
+    <!-- Email Label -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="4dp"
+        android:layout_gravity="start" />
+
     <EditText
         android:id="@+id/emailEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/email"
         android:inputType="textEmailAddress"
-        android:text="josem3@gmail.com"
-        android:layout_marginTop="16dp" />
+        android:text="Yuval19@gmail.com"
+        android:layout_marginTop="8dp" />
+
+    <!-- Password Label -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Password"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="4dp"
+        android:layout_gravity="start" />
 
     <EditText
         android:id="@+id/passwordEditText"
@@ -44,15 +67,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/login"
-        android:background="@color/colorAccent"
+        android:background="@drawable/rounded_button"
         android:textColor="@android:color/white"
         android:layout_marginTop="16dp" />
 
     <TextView
+        android:id="@+id/signUpButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/no_account"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="8dp"
+        android:text="Don\'t have an account yet? Sign up"
+        android:textColor="@color/colorPrimaryDark"
+        android:clickable="true"
+        android:focusable="true" />
 
 </LinearLayout>

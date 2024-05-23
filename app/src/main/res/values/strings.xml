@@ -3,6 +3,6 @@
     <string name="login">Log in</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="no_account">Don\'t have an account? Sign up</string>
+    <string name="no_account">Don\'t have an account yet? Sign up</string>
     <string name="app_logo">eaSYshop Logo</string>
 </resources>

@@ -1,8 +1,56 @@
 <resources>
+
+<!--    Login Page-->
     <string name="app_name">eaSYshop</string>
     <string name="login">Log in</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="no_account">Don\'t have an account yet? Sign up</string>
+    <string name="no_account">Don\'t have an account yet?</string>
+    <string name="sign_up">Sign up</string>
+    <string name="toggle_password_visibility">Toggle password visibility</string>
     <string name="app_logo">eaSYshop Logo</string>
+
+<!--    payment page-->
+    <string name="payment_page">Payment Page</string>
+    <string name="credit_card">Credit card</string>
+    <string name="card_number">Card number</string>
+    <string name="card_holder">Card holder</string>
+    <string name="expiration_date">Expiration date</string>
+    <string name="cvv">CVV</string>
+    <string name="terms_and_conditions">By selecting the button below, I agree to the Property Rules, Terms and Conditions, Privacy Policy and COVID-19 Safety Requirements.</string>
+    <string name="confirm_and_pay">Confirm and pay</string>
+
+<!--    Create Post Page-->
+    <string name="sell_post">Sell Post</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="price_in_usd">Price in USD</string>
+    <string name="pickup_address">pickup address</string>
+    <string name="address">Address</string>
+    <string name="pickup_location">Pickup location</string>
+    <string name="upload_images">Upload images</string>
+    <string name="product_image">Product image</string>
+    <string name="submit">Submit</string>
+
+    <string-array name="cities">
+        <item>Select city</item>
+        <item>Lod</item>
+        <item>Rishon Lezion</item>
+        <item>Tel Aviv</item>
+        <item>Ness Ziona</item>
+    </string-array>
+
+<!--    bottom navigation bar-->
+    <string name="nav_home">Home</string>
+    <string name="nav_profile">My Profile</string>
+    <string name="nav_logout">Logout</string>
+    <string name="nav_wishlist">Wish List</string>
+    <string name="nav_orders">My Orders</string>
+
+
+
+
+
+
 </resources>
+

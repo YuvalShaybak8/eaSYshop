@@ -42,6 +42,8 @@
         android:layout_height="wrap_content"
         android:hint="@string/email"
         android:inputType="textEmailAddress"
+        android:drawableStart="@drawable/ic_email"
+        android:drawablePadding="8dp"
         android:text="Yuval19@gmail.com"
         android:layout_marginTop="8dp" />
 
@@ -54,13 +56,32 @@
         android:layout_marginBottom="4dp"
         android:layout_gravity="start" />
 
-    <EditText
-        android:id="@+id/passwordEditText"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/password"
-        android:inputType="textPassword"
-        android:layout_marginTop="8dp" />
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/passwordEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:drawableStart="@drawable/ic_password"
+            android:drawablePadding="8dp"
+            android:layout_marginTop="8dp"
+            android:paddingEnd="50dp" />
+
+        <ImageButton
+            android:id="@+id/passwordToggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_eye"
+            android:contentDescription="@string/toggle_password_visibility"
+            android:padding="8dp" />
+    </RelativeLayout>
 
     <Button
         android:id="@+id/loginButton"
@@ -71,6 +92,7 @@
         android:textColor="@android:color/white"
         android:layout_marginTop="16dp" />
 
+    <!-- Sign Up Button-like TextView -->
     <TextView
         android:id="@+id/signUpButton"
         android:layout_width="wrap_content"
@@ -78,7 +100,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
         android:text="Don\'t have an account yet? Sign up"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/colorAccent"
         android:clickable="true"
         android:focusable="true" />
 

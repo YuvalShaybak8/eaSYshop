@@ -3,12 +3,19 @@
 <!--    Login Page-->
     <string name="app_name">eaSYshop</string>
     <string name="login">Log in</string>
-    <string name="email">Email</string>
-    <string name="password">Password</string>
+    <string name="email_login">Email</string>
+    <string name="password_login">Password</string>
     <string name="no_account">Don\'t have an account yet?</string>
-    <string name="sign_up">Sign up</string>
     <string name="toggle_password_visibility">Toggle password visibility</string>
     <string name="app_logo">eaSYshop Logo</string>
+
+<!--    Signup Page-->
+    <string name="sign_up">Sign Up</string>
+    <string name="name_signup">Name</string>
+    <string name="email_signup">Email</string>
+    <string name="password_signup">Password</string>
+    <string name="sign_up_button">Sign Up</string>
+    <string name="already_have_account">Already have an account? </string>
 
 <!--    payment page-->
     <string name="payment_page">Payment Page</string>
@@ -17,7 +24,6 @@
     <string name="card_holder">Card holder</string>
     <string name="expiration_date">Expiration date</string>
     <string name="cvv">CVV</string>
-    <string name="terms_and_conditions">By selecting the button below, I agree to the Property Rules, Terms and Conditions, Privacy Policy and COVID-19 Safety Requirements.</string>
     <string name="confirm_and_pay">Confirm and pay</string>
 
 <!--    Create Post Page-->
@@ -46,11 +52,6 @@
     <string name="nav_logout">Logout</string>
     <string name="nav_wishlist">Wish List</string>
     <string name="nav_orders">My Orders</string>
-
-
-
-
-
 
 </resources>
 

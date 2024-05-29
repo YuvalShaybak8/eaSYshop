@@ -9,11 +9,14 @@ public class UserModel {
         public String password;
         public String image;
         public ArrayList<PostModel> myPosts;
-        public ArrayList<PostModel> whishList;
+        public ArrayList<PostModel> wishList;
         public ArrayList<PostModel> myOrders;
 
         public UserModel() {
-            //TO DO
+            this.myPosts = new ArrayList<>();
+            this.wishList = new ArrayList<>();
+            this.myOrders = new ArrayList<>();
+            //this.image =
         }
 
         public UserModel(String name, String email,String password) {

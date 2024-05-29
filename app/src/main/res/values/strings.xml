@@ -27,7 +27,7 @@
     <string name="confirm_and_pay">Confirm and pay</string>
 
 <!--    Create Post Page-->
-    <string name="sell_post">Sell Post</string>
+    <string name="sell_post">Create Post</string>
     <string name="title">Title</string>
     <string name="description">Description</string>
     <string name="price_in_usd">Price in USD</string>
@@ -47,11 +47,29 @@
     </string-array>
 
 <!--    bottom navigation bar-->
-    <string name="nav_home">Home</string>
-    <string name="nav_profile">My Profile</string>
-    <string name="nav_logout">Logout</string>
-    <string name="nav_wishlist">Wish List</string>
-    <string name="nav_orders">My Orders</string>
+    <string name="home">Home</string>
+    <string name="post">Post</string>
+    <string name="menu">Menu</string>
+    <string name="menu_title">Menu Actions</string>
+    <string name="my_posts">My Posts</string>
+    <string name="profile">My Profile</string>
+    <string name="logout">Log Out</string>
+    <string name="wishlist">Wish List</string>
+    <string name="my_orders">My Orders</string>
+
+    <!-- wishlists -->
+    <string name="wishList">Wishlists</string>
+    <string name="title1">Puma Sofa 2021</string>
+    <string name="title2">Sony Radio XM54 </string>
+    <string name="description1"> What an amazing Sofa for your Family</string>
+    <string name="description2"> Great Radio to hear Music in the morning</string>
+
+    <!-- Profile edit page -->
+    <string name="profile_image">Profile Image</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="update">Update</string>
 
 </resources>
 

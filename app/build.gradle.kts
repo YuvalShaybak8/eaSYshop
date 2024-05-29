@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -32,11 +33,14 @@ dependencies {
 
     implementation(libs.appcompat)
     implementation(libs.fragment)
+    implementation(libs.circleimageview)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(libs.firebase.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-
+//    implementation(libs.dagger.hilt.android) // Change to hilt-android
+//    implementation(libs.dagger.hilt.compiler) // Add this line for the Hilt compiler
 }

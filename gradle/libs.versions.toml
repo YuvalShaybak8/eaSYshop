@@ -25,9 +25,11 @@ activity = { group = "androidx.activity", name = "activity", version.ref = "acti
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 fragment = { group = "androidx.fragment", name = "fragment", version.ref = "fragment" }
 circleimageview = { group = "de.hdodenhof", name = "circleimageview", version = "3.1.0" }
-firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
+
 dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "daggerhilt" }
 dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hiltCompiler" }
+
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
 
 

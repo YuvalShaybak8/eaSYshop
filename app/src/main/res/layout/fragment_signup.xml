@@ -48,7 +48,7 @@
             android:src="@drawable/ic_profile"/>
 
         <EditText
-            android:id="@+id/usernameEditText"
+            android:id="@+id/nameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/name_signup"
@@ -114,7 +114,7 @@
     </RelativeLayout>
 
     <Button
-        android:id="@+id/signUpButton"
+        android:id="@+id/submitButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/sign_up_button"

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "267394609535",
+    "project_id": "easyshop-f740f",
+    "storage_bucket": "easyshop-f740f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:267394609535:android:a7c8582957cf3fc341aa4a",
+        "android_client_info": {
+          "package_name": "com.example.easyshop"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfVb-RssH9jVW1-1-yE7BNVjzDx828w5k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

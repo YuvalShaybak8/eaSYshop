@@ -3,8 +3,13 @@
 
     <color name="colorBackground">#fff</color>
     <color name="colorButton">#00bdd6</color>
-    <color name="colorAccent">#03DAC5</color>
+    <color name="colorNav">#00bdd6</color>
     <color name="colorGeneral">#000</color>
     <color name="bottomNavBackground">#F5F5F5</color>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
+    <color name="primary_color">#F7706EFF</color>
+    <color name="white">#FFFFFF</color>
 
 </resources>

@@ -2,7 +2,7 @@
 
 <!--    Login Page-->
     <string name="app_name">eaSYshop</string>
-    <string name="login">Log in</string>
+    <string name="login">Login</string>
     <string name="email_login">Email</string>
     <string name="password_login">Password</string>
     <string name="no_account">Don\'t have an account yet?</string>

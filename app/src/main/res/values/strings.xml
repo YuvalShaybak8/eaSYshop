@@ -14,7 +14,7 @@
     <string name="name_register">Name</string>
     <string name="email_register">Email</string>
     <string name="password_register">Password</string>
-    <string name="register_button">Register</string>
+    <string name="register_button">Create Account</string>
     <string name="already">Already Registered? </string>
 
 <!--    payment page-->

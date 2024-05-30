@@ -3,34 +3,36 @@ package com.example.easyshop.Fragments;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.easyshop.R;
-import com.example.easyshop.Model.UserModel;
+import com.example.easyshop.activities.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.rpc.context.AttributeContext;
 
 public class LoginFragment extends Fragment {
 
     private DatabaseReference mDatabase;
-//    private EditText nameEditText;
     private EditText emailEditText;
     private EditText passwordEditText;
     private Button loginButton;
-    private Button registerButton;
-
+    private Button signUpButton;
+    private ImageButton passwordToggle;
     private FirebaseAuth mAuth;
+    private boolean isPasswordVisible = false;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -39,35 +41,62 @@ public class LoginFragment extends Fragment {
 
         // Initialize Firebase Database
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
 
-//        nameEditText = view.findViewById(R.id.nameEditText);
         emailEditText = view.findViewById(R.id.emailEditText);
         passwordEditText = view.findViewById(R.id.passwordEditText);
         loginButton = view.findViewById(R.id.loginButton);
-        registerButton = view.findViewById(R.id.signUpButton);
+        passwordToggle = view.findViewById(R.id.passwordToggle);
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                loginUserAccount();
-            }
+        loginButton.setOnClickListener(v -> loginUserAccount());
+
+        Button signUpButton = view.findViewById(R.id.signUpButton);
+        signUpButton.setOnClickListener(v -> {
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new RegisterFragment())
+                    .addToBackStack(null)
+                    .commit();
         });
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                Toast.makeText(getContext(), "sign up pressed", Toast.LENGTH_SHORT).show();
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                FragmentTransaction transaction = fm.beginTransaction();
-                transaction.replace(R.id.fragment_container, new RegisterFragment()).addToBackStack(null).commit();
-
+        passwordToggle.setOnClickListener(v -> {
+            if (isPasswordVisible) {
+                passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                passwordToggle.setImageResource(R.drawable.ic_hide_password);
+            } else {
+                passwordEditText.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                passwordToggle.setImageResource(R.drawable.ic_show_password);
             }
+            isPasswordVisible = !isPasswordVisible;
+            // Move the cursor to the end of the input text
+            passwordEditText.setSelection(passwordEditText.length());
         });
-
 
         return view;
     }
+
+    private void loginUserAccount() {
+        String email = emailEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
+
+        if (TextUtils.isEmpty(email)) {
+            Toast.makeText(getContext(), "Please enter email!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (TextUtils.isEmpty(password)) {
+            Toast.makeText(getContext(), "Please enter password!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getContext(), "Login successful!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "Login failed!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+}
+
+
 
 //    private void writeNewUser(String name, String email,String password) {
 //        String userId = mDatabase.push().getKey();
@@ -83,27 +112,3 @@ public class LoginFragment extends Fragment {
 //                    });
 //        }
 //    }
-    private void loginUserAccount() {
-        mAuth = FirebaseAuth.getInstance();
-        String email, password;
-        email = emailEditText.getText().toString();
-        password = passwordEditText.getText().toString();
-
-        if(TextUtils.isEmpty(email)){
-            Toast.makeText(getContext(), "Please enter email!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if(TextUtils.isEmpty(password)){
-            Toast.makeText(getContext(), "Please enter password!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(getContext(), "Login successful!", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getContext(), "Login failed! ", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-}

@@ -24,7 +24,8 @@
         android:textSize="24sp"
         android:textStyle="bold"
         android:layout_marginTop="32dp"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        android:fontFamily="@font/josefinsans"/>
 
     <!-- Username Label -->
     <TextView
@@ -33,7 +34,8 @@
         android:text="Username"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="4dp"
-        android:layout_gravity="start" />
+        android:layout_gravity="start"
+        android:fontFamily="@font/josefinsans"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -55,7 +57,8 @@
             android:inputType="text"
             android:drawablePadding="8dp"
             android:layout_toEndOf="@id/profileIcon"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/josefinsans"/>
     </RelativeLayout>
 
     <!-- Email Label -->
@@ -65,7 +68,8 @@
         android:text="@string/email_register"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="4dp"
-        android:layout_gravity="start" />
+        android:layout_gravity="start"
+        android:fontFamily="@font/josefinsans"/>
 
     <EditText
         android:id="@+id/emailEditText"
@@ -75,7 +79,8 @@
         android:inputType="textEmailAddress"
         android:drawableStart="@drawable/ic_email"
         android:drawablePadding="8dp"
-        android:layout_marginTop="8dp" />
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/josefinsans"/>
 
     <!-- Password Label -->
     <TextView
@@ -84,7 +89,8 @@
         android:text="@string/password_register"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="4dp"
-        android:layout_gravity="start" />
+        android:layout_gravity="start"
+        android:fontFamily="@font/josefinsans"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -99,7 +105,8 @@
             android:drawableStart="@drawable/ic_password"
             android:drawablePadding="8dp"
             android:layout_marginTop="8dp"
-            android:paddingEnd="50dp" />
+            android:paddingEnd="50dp"
+            android:fontFamily="@font/josefinsans" />
 
         <ImageButton
             android:id="@+id/passwordToggle"
@@ -108,7 +115,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_eye"
+            android:src="@drawable/ic_hide_password"
             android:contentDescription="@string/toggle_password_visibility"
             android:padding="8dp" />
     </RelativeLayout>
@@ -119,7 +126,8 @@
         android:layout_height="wrap_content"
         android:text="@string/register_button"
         android:color="@color/colorButton"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/josefinsans"/>
 
     <!-- Sign In Button -->
     <LinearLayout
@@ -132,7 +140,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/already"
-            android:textColor="@color/colorGeneral" />
+            android:textColor="@color/colorGeneral"
+            android:fontFamily="@font/josefinsans"/>
 
         <Button
             android:id="@+id/signInButton"
@@ -142,7 +151,16 @@
             android:background="@android:color/transparent"
             android:textColor="@color/colorAccent"
             android:clickable="true"
-            android:focusable="true" />
+            android:focusable="true"
+            android:fontFamily="@font/josefinsans"/>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
     </LinearLayout>
 
 </LinearLayout>

@@ -17,6 +17,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation" />
 
+    <!--try-->
+    <androidx.fragment.app.FragmentContainerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/fragment_container_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.example.easyshop.Fragments.LoginFragment" />
+
+
     <!-- Bottom Navigation -->
     <include
         android:id="@+id/bottom_navigation"

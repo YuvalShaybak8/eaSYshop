@@ -20,7 +20,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/sign_up"
+        android:text="@string/register_title"
         android:textSize="24sp"
         android:textStyle="bold"
         android:layout_marginTop="32dp"
@@ -51,7 +51,7 @@
             android:id="@+id/nameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/name_signup"
+            android:hint="@string/name_register"
             android:inputType="text"
             android:drawablePadding="8dp"
             android:layout_toEndOf="@id/profileIcon"
@@ -62,7 +62,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/email_signup"
+        android:text="@string/email_register"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="4dp"
         android:layout_gravity="start" />
@@ -81,7 +81,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/password_signup"
+        android:text="@string/password_register"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="4dp"
         android:layout_gravity="start" />
@@ -114,10 +114,10 @@
     </RelativeLayout>
 
     <Button
-        android:id="@+id/submitButton"
+        android:id="@+id/registerButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/sign_up_button"
+        android:text="@string/register_button"
         android:color="@color/colorButton"
         android:layout_marginTop="16dp" />
 
@@ -131,14 +131,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/already_have_account"
+            android:text="@string/already"
             android:textColor="@color/colorGeneral" />
 
         <Button
             android:id="@+id/signInButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sign In"
+            android:text="Login Here"
             android:background="@android:color/transparent"
             android:textColor="@color/colorAccent"
             android:clickable="true"

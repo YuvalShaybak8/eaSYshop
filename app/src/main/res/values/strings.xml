@@ -9,13 +9,13 @@
     <string name="toggle_password_visibility">Toggle password visibility</string>
     <string name="app_logo">eaSYshop Logo</string>
 
-<!--    Signup Page-->
-    <string name="sign_up">Sign Up</string>
-    <string name="name_signup">Name</string>
-    <string name="email_signup">Email</string>
-    <string name="password_signup">Password</string>
-    <string name="sign_up_button">Sign Up</string>
-    <string name="already_have_account">Already have an account? </string>
+<!--    Register Page-->
+    <string name="register_title">Register</string>
+    <string name="name_register">Name</string>
+    <string name="email_register">Email</string>
+    <string name="password_register">Password</string>
+    <string name="register_button">Register</string>
+    <string name="already">Already Registered? </string>
 
 <!--    payment page-->
     <string name="payment_page">Payment Page</string>

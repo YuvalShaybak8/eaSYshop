@@ -20,7 +20,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import com.example.easyshop.R;
 
-
 public class MainActivity extends AppCompatActivity {
     Fragment loginFragment = new LoginFragment();
 
@@ -28,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         if (savedInstanceState == null) {
             FragmentManager fragmentManager = getSupportFragmentManager();

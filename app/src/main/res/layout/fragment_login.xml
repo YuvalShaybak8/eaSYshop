@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:background="@color/colorBackground"
     android:padding="16dp"
-    android:fontFamily="@font/JosefinSans">
+    android:fontFamily="@font/josefinsans">
 
     <!-- Spacer to lower all elements on the screen -->
     <View
@@ -27,7 +27,7 @@
         android:textStyle="bold"
         android:layout_marginTop="32dp"
         android:layout_gravity="center_horizontal"
-        android:fontFamily="@font/JosefinSans" />
+        android:fontFamily="@font/josefinsans" />
 
     <!-- Email Label -->
     <TextView
@@ -37,7 +37,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="4dp"
         android:layout_gravity="start"
-        android:fontFamily="@font/JosefinSans"/>
+        android:fontFamily="@font/josefinsans"/>
 
     <EditText
         android:id="@+id/emailEditText"
@@ -48,7 +48,7 @@
         android:drawableStart="@drawable/ic_email"
         android:drawablePadding="8dp"
         android:layout_marginTop="8dp"
-        android:fontFamily="@font/JosefinSans"/>
+        android:fontFamily="@font/josefinsans"/>
 
     <!-- Password Label -->
     <TextView
@@ -58,7 +58,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="4dp"
         android:layout_gravity="start"
-        android:fontFamily="@font/JosefinSans"/>
+        android:fontFamily="@font/josefinsans"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -74,7 +74,7 @@
             android:drawablePadding="8dp"
             android:layout_marginTop="8dp"
             android:paddingEnd="50dp"
-            android:fontFamily="@font/JosefinSans" />
+            android:fontFamily="@font/josefinsans" />
 
         <ImageButton
             android:id="@+id/passwordToggle"
@@ -95,7 +95,7 @@
         android:text="@string/login"
         android:color="@color/colorButton"
         android:layout_marginTop="16dp"
-        android:fontFamily="@font/JosefinSans" />
+        android:fontFamily="@font/josefinsans" />
 
     <!-- Sign Up Button -->
     <LinearLayout
@@ -109,7 +109,7 @@
             android:layout_height="wrap_content"
             android:text="Don\'t have an account yet?"
             android:textColor="@color/colorGeneral"
-            android:fontFamily="@font/JosefinSans" />
+            android:fontFamily="@font/josefinsans" />
 
         <Button
             android:id="@+id/signUpButton"
@@ -120,7 +120,7 @@
             android:textColor="@color/colorAccent"
             android:clickable="true"
             android:focusable="true"
-            android:fontFamily="@font/JosefinSans" />
+            android:fontFamily="@font/josefinsans" />
     </LinearLayout>
 
 </LinearLayout>

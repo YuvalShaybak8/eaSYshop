@@ -11,6 +11,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.easyshop.R;
 import com.example.easyshop.Model.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
@@ -55,7 +58,10 @@ public class LoginFragment extends Fragment {
             public void onClick(View v)
             {
                 Toast.makeText(getContext(), "sign up pressed", Toast.LENGTH_SHORT).show();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new RegisterFragment()).commit();
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = fm.beginTransaction();
+                transaction.replace(R.id.fragment_container, new RegisterFragment()).addToBackStack(null).commit();
+
             }
         });
 

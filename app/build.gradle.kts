@@ -46,11 +46,4 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
     implementation(libs.firebase.firestore)
-
-
-
-
-
-//    implementation(libs.dagger.hilt.android) // Change to hilt-android
-//    implementation(libs.dagger.hilt.compiler) // Add this line for the Hilt compiler
 }

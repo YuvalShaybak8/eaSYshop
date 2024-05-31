@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,7 +20,11 @@ import androidx.fragment.app.Fragment;
 
 import com.example.easyshop.R;
 import com.example.easyshop.activities.MainActivity;
+import com.example.easyshop.Fragments.HomeFragment;
+
+//FireBase
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -85,10 +90,18 @@ public class LoginFragment extends Fragment {
             Toast.makeText(getContext(), "Please enter password!", Toast.LENGTH_SHORT).show();
             return;
         }
+
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(getContext(), "Login successful!", Toast.LENGTH_SHORT).show();
+                        // Log the successful login
+                        android.util.Log.d("LoginFragment", "User logged in successfully");
+
+                        // Navigate to HomeFragment
+                        getParentFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container, new HomeFragment())
+                                .commit();
                     } else {
                         Toast.makeText(getContext(), "Login failed!", Toast.LENGTH_SHORT).show();
                     }

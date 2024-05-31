@@ -13,18 +13,21 @@
         android:textStyle="bold" />
 
     <EditText
+        android:id="@+id/createPostTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/title"
         android:layout_marginTop="16dp" />
 
     <EditText
+        android:id="@+id/createPostDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/description"
         android:layout_marginTop="16dp" />
 
     <EditText
+        android:id="@+id/createPostPrice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/price_in_usd"
@@ -38,12 +41,14 @@
         android:layout_marginTop="16dp">
 
         <ImageView
+            android:id="@+id/userLocation"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_location_pin"
             android:contentDescription="@string/pickup_address" />
 
         <TextView
+            android:id="@+id/createPostLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/pickup_address"
@@ -53,6 +58,7 @@
     </LinearLayout>
 
     <EditText
+        android:id="@+id/createPostAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/address"
@@ -69,27 +75,24 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="16dp">
 
-<!--        <ImageView-->
-<!--            android:layout_width="100dp"-->
-<!--            android:layout_height="100dp"-->
-<!--            android:src="@drawable/ic_add_image"-->
-<!--            android:contentDescription="@string/upload_images" />-->
+        <ImageView
+            android:id="@+id/createPostImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/add_image"
+            android:contentDescription="@string/upload_images"
+            android:clickable="true"/>
 
-<!--        <ImageView-->
-<!--            android:layout_width="100dp"-->
-<!--            android:layout_height="100dp"-->
-<!--            android:src="@drawable/backpack_image"-->
-<!--            android:layout_marginStart="16dp"-->
-<!--            android:contentDescription="@string/product_image" />-->
 
     </LinearLayout>
 
     <Button
+        android:id="@+id/createPostSubmitButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/submit"

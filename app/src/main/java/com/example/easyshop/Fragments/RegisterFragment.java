@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.easyshop.Model.UserModel;
 import com.example.easyshop.R;
-import com.example.easyshop.activities.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 

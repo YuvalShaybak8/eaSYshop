@@ -1,5 +1,6 @@
 package com.example.easyshop.Fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -89,7 +90,8 @@ public class ProfileFragment extends Fragment {
     }
 
     private void showImageSelectionDialog() {
-        // Image selection dialog implementation here
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
     }
 
     private void updateUserProfile(String username, String email, String password) {
@@ -127,6 +129,14 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Handle image selection or capture
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == PICK_IMAGE_REQUEST) {
+                Uri selectedImageUri = data.getData();
+            } else if (requestCode == CAMERA_REQUEST_CODE) {
+                Bitmap photo = (Bitmap) data.getExtras().get("data");
+            }
+        }
     }
 }

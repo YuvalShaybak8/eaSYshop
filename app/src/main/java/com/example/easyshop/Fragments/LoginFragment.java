@@ -19,8 +19,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.easyshop.R;
-import com.example.easyshop.activities.MainActivity;
-import com.example.easyshop.Fragments.HomeFragment;
 
 //FireBase
 import com.google.firebase.auth.FirebaseAuth;

@@ -13,9 +13,11 @@ import com.example.easyshop.Fragments.CreatePostFragment;
 import com.example.easyshop.Fragments.LoginFragment;
 import com.example.easyshop.Fragments.ProfileFragment;
 import com.example.easyshop.Fragments.RegisterFragment;
+import com.example.easyshop.Fragments.HomeFragment;
 import com.example.easyshop.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.squareup.picasso.Picasso;
+
 
 public class MainActivity extends AppCompatActivity {
 

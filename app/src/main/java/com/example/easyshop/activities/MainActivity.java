@@ -7,20 +7,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import com.example.easyshop.Fragments.CreatePostFragment;
+//import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 import com.example.easyshop.Fragments.LoginFragment;
 import com.example.easyshop.Fragments.ProfileFragment;
 import com.example.easyshop.Fragments.RegisterFragment;
-import com.example.easyshop.Fragments.HomeFragment;
 import com.example.easyshop.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.squareup.picasso.Picasso;
 
-
 public class MainActivity extends AppCompatActivity {
 
+//    private NavController navController;
     private FrameLayout menuContainer;
     private BottomNavigationView bottomNavigationView;
     private ImageView profilePic;
@@ -36,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         profilePic = findViewById(R.id.profilePic);
         title = findViewById(R.id.title);
-        header = findViewById(R.id.header); // Add this line
+        header = findViewById(R.id.header);
 
         if (savedInstanceState == null) {
             replaceFragment(new LoginFragment());
@@ -54,13 +53,16 @@ public class MainActivity extends AppCompatActivity {
             // Handle profile picture click to navigate to profile details
             replaceFragment(new ProfileFragment());
         });
+
+//        // Set up NavController for bottom navigation
+//        NavController navController = Navigation.findNavController(this, R.id.fragment_container);
+//        NavigationUI.setupWithNavController(bottomNavigationView, navController);
     }
 
     private void replaceFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
-        transaction.commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit();
 
         updateUIForFragment(fragment);
     }

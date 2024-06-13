@@ -13,6 +13,8 @@ firebaseAuth = "23.0.0"
 firebaseDatabase = "21.0.0"
 firebaseFirestore = "25.0.0"
 picasso = "2.8"
+navigationFragmentKtx = "2.3.5"
+navigationUiKtx = "2.3.5"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -24,6 +26,8 @@ activity = { group = "androidx.activity", name = "activity", version.ref = "acti
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 fragment = { group = "androidx.fragment", name = "fragment", version.ref = "fragment" }
 circleimageview = { group = "de.hdodenhof", name = "circleimageview", version = "3.1.0" }
+navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
+navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
 
 #FireBase
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
@@ -32,6 +36,8 @@ firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore
 
 # Picasso
 picasso = { group = "com.squareup.picasso", name = "picasso", version = "2.8" }
+
+
 
 
 [plugins]

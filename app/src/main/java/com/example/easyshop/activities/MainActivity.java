@@ -7,9 +7,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-//import androidx.navigation.NavController;
+import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
+
+import com.example.easyshop.Fragments.CreatePostFragment;
+import com.example.easyshop.Fragments.HomeFragment;
 import com.example.easyshop.Fragments.LoginFragment;
 import com.example.easyshop.Fragments.ProfileFragment;
 import com.example.easyshop.Fragments.RegisterFragment;
@@ -19,12 +23,12 @@ import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
 
-//    private NavController navController;
     private FrameLayout menuContainer;
     private BottomNavigationView bottomNavigationView;
     private ImageView profilePic;
     private TextView title;
     private View header;
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +58,33 @@ public class MainActivity extends AppCompatActivity {
             replaceFragment(new ProfileFragment());
         });
 
-//        // Set up NavController for bottom navigation
-//        NavController navController = Navigation.findNavController(this, R.id.fragment_container);
-//        NavigationUI.setupWithNavController(bottomNavigationView, navController);
+        // Handle bottom navigation item selection
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.action_home) {
+                replaceFragment(new HomeFragment());
+                return true;
+            } else if (itemId == R.id.action_create_post) {
+                replaceFragment(new CreatePostFragment());
+                return true;
+            } else if (itemId == R.id.action_menu) {
+                // Replace with the appropriate fragment for the menu
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        // Add this line to show header and bottom navigation when the app launches with HomeFragment
+        updateUIForFragment(new HomeFragment());
+
+        // Add a fragment transaction listener to update the UI when the fragment changes
+        getSupportFragmentManager().addOnBackStackChangedListener(() -> {
+            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            if (currentFragment != null) {
+                updateUIForFragment(currentFragment);
+            }
+        });
     }
 
     private void replaceFragment(Fragment fragment) {

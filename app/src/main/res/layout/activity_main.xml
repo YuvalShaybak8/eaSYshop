@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -25,7 +24,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
-        app:layout_constraintVertical_bias="0.5"
         app:navGraph="@navigation/nav_graph" />
 
     <!-- Bottom Navigation View -->
@@ -33,9 +31,10 @@
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorNav"
+        android:background="@color/colorPrimary"
         app:itemIconTint="@color/white"
         app:itemTextColor="@color/white"
+        app:itemBackground="@drawable/transparent_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -51,9 +50,6 @@
         android:elevation="5dp"
         android:padding="16dp"
         android:visibility="gone">
-
         <!-- Menu items content -->
-
     </FrameLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

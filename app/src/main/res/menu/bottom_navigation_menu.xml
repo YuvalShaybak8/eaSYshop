@@ -1,14 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_home"
-        android:icon="@drawable/ic_home"
+        android:icon="@drawable/nav_home_selector"
         android:title="Home" />
     <item
         android:id="@+id/action_create_post"
-        android:icon="@drawable/ic_plus"
+        android:icon="@drawable/nav_plus_selector"
         android:title="Create Post" />
     <item
         android:id="@+id/action_menu"
-        android:icon="@drawable/ic_menu"
+        android:icon="@drawable/nav_menu_selector"
         android:title="Menu" />
 </menu>

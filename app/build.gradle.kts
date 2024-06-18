@@ -30,7 +30,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.fragment)
     implementation(libs.circleimageview)
@@ -44,13 +43,17 @@ dependencies {
     // Add these lines for navigation component
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.navigation.ui.ktx)
-    
-    //implementation(googleServices)
 
-//    FireBase
+    // FireBase
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
     implementation(libs.firebase.firestore)
 
     implementation(libs.picasso)
+
+    // Google Places API
+    implementation(libs.google.places)
+
+    // Volley
+    implementation(libs.volley)
 }

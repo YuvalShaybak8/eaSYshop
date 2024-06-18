@@ -5,21 +5,20 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.NavigationUI;
 
 import com.example.easyshop.Fragments.CreatePostFragment;
 import com.example.easyshop.Fragments.HomeFragment;
 import com.example.easyshop.Fragments.LoginFragment;
+import com.example.easyshop.Fragments.MenuBottomSheetFragment;
 import com.example.easyshop.Fragments.ProfileFragment;
 import com.example.easyshop.Fragments.RegisterFragment;
 import com.example.easyshop.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.squareup.picasso.Picasso;
+import com.google.android.libraries.places.api.Places;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,12 +27,14 @@ public class MainActivity extends AppCompatActivity {
     private ImageView profilePic;
     private TextView title;
     private View header;
-    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Initialize the Places API with your API key
+        Places.initialize(getApplicationContext(), "AIzaSyAE412NbG66NdE68Fap8_ncqt_crHnxYTE");
 
         menuContainer = findViewById(R.id.menu_container);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -68,15 +69,14 @@ public class MainActivity extends AppCompatActivity {
                 replaceFragment(new CreatePostFragment());
                 return true;
             } else if (itemId == R.id.action_menu) {
-                // Replace with the appropriate fragment for the menu
+                // Show bottom sheet menu
+                new MenuBottomSheetFragment().show(getSupportFragmentManager(), "MenuBottomSheetFragment");
+                bottomNavigationView.setVisibility(View.GONE);
                 return true;
             } else {
                 return false;
             }
         });
-
-        // Add this line to show header and bottom navigation when the app launches with HomeFragment
-        updateUIForFragment(new HomeFragment());
 
         // Add a fragment transaction listener to update the UI when the fragment changes
         getSupportFragmentManager().addOnBackStackChangedListener(() -> {
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void replaceFragment(Fragment fragment) {
+    public void replaceFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)
                 .commit();
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         updateUIForFragment(fragment);
     }
 
-    private void updateUIForFragment(Fragment fragment) {
+    public void updateUIForFragment(Fragment fragment) {
         if (fragment instanceof LoginFragment || fragment instanceof RegisterFragment) {
             bottomNavigationView.setVisibility(View.GONE);
             header.setVisibility(View.GONE); // Hide header
@@ -103,5 +103,20 @@ public class MainActivity extends AppCompatActivity {
             bottomNavigationView.setVisibility(View.VISIBLE);
             header.setVisibility(View.VISIBLE); // Show header
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        if (bottomNavigationView.getVisibility() == View.GONE) {
+            bottomNavigationView.setVisibility(View.VISIBLE);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    public void onBottomSheetDismissed() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setVisibility(View.VISIBLE);
     }
 }

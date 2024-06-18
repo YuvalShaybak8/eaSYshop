@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/homeFragment"
@@ -20,5 +20,13 @@
         android:name="com.example.easyshop.Fragments.ProfileFragment"
         tools:layout="@layout/fragment_profile_edit" />
 
-    <!-- Add other fragments as needed -->
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.easyshop.Fragments.LoginFragment"
+        tools:layout="@layout/fragment_login" />
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.easyshop.Fragments.RegisterFragment"
+        tools:layout="@layout/fragment_register" />
 </navigation>

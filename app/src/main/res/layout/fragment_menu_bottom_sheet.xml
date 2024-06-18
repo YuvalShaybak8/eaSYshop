@@ -1,0 +1,137 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_logout"
+            android:paddingEnd="8dp"/>
+
+        <Button
+            android:id="@+id/logout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Logout"
+            android:background="?attr/selectableItemBackground"
+            android:textAlignment="textStart"
+            android:padding="16dp"
+            android:drawableStart="@drawable/ic_logout"
+            android:drawablePadding="8dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_profile"
+            android:paddingEnd="8dp"/>
+
+        <Button
+            android:id="@+id/my_profile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="My Profile"
+            android:background="?attr/selectableItemBackground"
+            android:textAlignment="textStart"
+            android:padding="16dp"
+            android:drawableStart="@drawable/ic_profile"
+            android:drawablePadding="8dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_wishlist"
+            android:paddingEnd="8dp"/>
+
+        <Button
+            android:id="@+id/my_wish_list"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="My Wish List"
+            android:background="?attr/selectableItemBackground"
+            android:textAlignment="textStart"
+            android:padding="16dp"
+            android:drawableStart="@drawable/ic_wishlist"
+            android:drawablePadding="8dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_my_orders"
+            android:paddingEnd="8dp"/>
+
+        <Button
+            android:id="@+id/my_orders"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="My Orders"
+            android:background="?attr/selectableItemBackground"
+            android:textAlignment="textStart"
+            android:padding="16dp"
+            android:drawableStart="@drawable/ic_my_orders"
+            android:drawablePadding="8dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_my_post"
+            android:paddingEnd="8dp"/>
+
+        <Button
+            android:id="@+id/my_posts"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="My Posts"
+            android:background="?attr/selectableItemBackground"
+            android:textAlignment="textStart"
+            android:padding="16dp"
+            android:drawableStart="@drawable/ic_my_post"
+            android:drawablePadding="8dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

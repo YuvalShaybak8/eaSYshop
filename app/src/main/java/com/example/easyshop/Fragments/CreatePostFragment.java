@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +23,18 @@ import androidx.fragment.app.Fragment;
 import com.example.easyshop.Model.PostModel;
 import com.example.easyshop.R;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse;
+import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class CreatePostFragment extends Fragment {
 
@@ -40,6 +48,7 @@ public class CreatePostFragment extends Fragment {
     private Button buttonCreatePost;
     private Uri imageUri1, imageUri2, imageUri3;
     private FirebaseFirestore fs;
+    private PlacesClient placesClient;
 
     public CreatePostFragment() {
         // Required empty public constructor
@@ -58,6 +67,10 @@ public class CreatePostFragment extends Fragment {
         imageView2 = view.findViewById(R.id.createPostImage2);
         imageView3 = view.findViewById(R.id.createPostImage3);
         buttonCreatePost = view.findViewById(R.id.createPostSubmitButton);
+
+        // Initialize the Places API
+        Places.initialize(requireContext(), "AIzaSyAE412NbG66NdE68Fap8_ncqt_crHnxYTE");
+        placesClient = Places.createClient(requireContext());
 
         imageView1.setOnClickListener(v -> openImageSelector(1));
         imageView2.setOnClickListener(v -> openImageSelector(2));
@@ -90,27 +103,56 @@ public class CreatePostFragment extends Fragment {
             }
         });
 
-        // Initialize the AutocompleteSupportFragment.
-        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+        // Add a TextWatcher to the address field to trigger autocomplete suggestions
+        editTextAddress.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
-        if (autocompleteFragment != null) {
-            autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS));
-            autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-                @Override
-                public void onPlaceSelected(@NonNull Place place) {
-                    // Get the place address and set it to the address field
-                    editTextAddress.setText(place.getAddress());
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!s.toString().isEmpty()) {
+                    getAutocompleteSuggestions(s.toString());
                 }
+            }
 
-                @Override
-                public void onError(@NonNull Status status) {
-                    // Handle error
-                }
-            });
-        }
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
 
         return view;
+    }
+
+    private void getAutocompleteSuggestions(String query) {
+        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
+                .setQuery(query)
+                .build();
+
+        placesClient.findAutocompletePredictions(request).addOnCompleteListener(new OnCompleteListener<FindAutocompletePredictionsResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<FindAutocompletePredictionsResponse> task) {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    List<AutocompletePrediction> predictions = task.getResult().getAutocompletePredictions();
+                    if (!predictions.isEmpty()) {
+                        // Take the first prediction as an example
+                        AutocompletePrediction prediction = predictions.get(0);
+                        editTextAddress.setText(prediction.getFullText(null).toString());
+                    } else {
+                        Toast.makeText(getContext(), "No predictions found", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    // Handle the error
+                    Status status = task.getException() instanceof com.google.android.gms.common.api.ApiException ?
+                            ((com.google.android.gms.common.api.ApiException) task.getException()).getStatus() : null;
+                    if (status != null) {
+                        Toast.makeText(getContext(), "Error: " + status.getStatusMessage(), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "Unknown error occurred", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
     }
 
     private void openImageSelector(int imageViewNumber) {

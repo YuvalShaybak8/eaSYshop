@@ -63,13 +63,6 @@
         android:hint="@string/address"
         android:layout_marginTop="8dp" />
 
-    <fragment
-        android:id="@+id/autocomplete_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-        android:visibility="gone" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

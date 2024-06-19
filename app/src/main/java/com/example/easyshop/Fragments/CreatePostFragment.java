@@ -19,7 +19,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.easyshop.Adapters.AddressSuggestionsAdapter;
 import com.example.easyshop.Model.PostModel;
 import com.example.easyshop.R;
 import com.google.android.gms.common.api.Status;
@@ -27,13 +30,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.AutocompletePrediction;
-import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CreatePostFragment extends Fragment {
@@ -46,6 +48,8 @@ public class CreatePostFragment extends Fragment {
     private EditText editTextAddress;
     private ImageView imageView1, imageView2, imageView3;
     private Button buttonCreatePost;
+    private RecyclerView addressSuggestionsRecyclerView;
+    private AddressSuggestionsAdapter addressSuggestionsAdapter;
     private Uri imageUri1, imageUri2, imageUri3;
     private FirebaseFirestore fs;
     private PlacesClient placesClient;
@@ -67,6 +71,7 @@ public class CreatePostFragment extends Fragment {
         imageView2 = view.findViewById(R.id.createPostImage2);
         imageView3 = view.findViewById(R.id.createPostImage3);
         buttonCreatePost = view.findViewById(R.id.createPostSubmitButton);
+        addressSuggestionsRecyclerView = view.findViewById(R.id.addressSuggestionsRecyclerView);
 
         // Initialize the Places API
         Places.initialize(requireContext(), "AIzaSyAE412NbG66NdE68Fap8_ncqt_crHnxYTE");
@@ -75,6 +80,14 @@ public class CreatePostFragment extends Fragment {
         imageView1.setOnClickListener(v -> openImageSelector(1));
         imageView2.setOnClickListener(v -> openImageSelector(2));
         imageView3.setOnClickListener(v -> openImageSelector(3));
+
+        addressSuggestionsAdapter = new AddressSuggestionsAdapter(new ArrayList<>(), suggestion -> {
+            editTextAddress.setText(suggestion);
+            addressSuggestionsRecyclerView.setVisibility(View.GONE);
+        });
+
+        addressSuggestionsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        addressSuggestionsRecyclerView.setAdapter(addressSuggestionsAdapter);
 
         buttonCreatePost.setOnClickListener(v -> {
             String title = editTextTitle.getText().toString();
@@ -113,6 +126,8 @@ public class CreatePostFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!s.toString().isEmpty()) {
                     getAutocompleteSuggestions(s.toString());
+                } else {
+                    addressSuggestionsRecyclerView.setVisibility(View.GONE);
                 }
             }
 
@@ -134,12 +149,15 @@ public class CreatePostFragment extends Fragment {
             public void onComplete(@NonNull Task<FindAutocompletePredictionsResponse> task) {
                 if (task.isSuccessful() && task.getResult() != null) {
                     List<AutocompletePrediction> predictions = task.getResult().getAutocompletePredictions();
-                    if (!predictions.isEmpty()) {
-                        // Take the first prediction as an example
-                        AutocompletePrediction prediction = predictions.get(0);
-                        editTextAddress.setText(prediction.getFullText(null).toString());
+                    List<String> suggestionList = new ArrayList<>();
+                    for (AutocompletePrediction prediction : predictions) {
+                        suggestionList.add(prediction.getFullText(null).toString());
+                    }
+                    if (!suggestionList.isEmpty()) {
+                        addressSuggestionsRecyclerView.setVisibility(View.VISIBLE);
+                        addressSuggestionsAdapter.updateSuggestions(suggestionList);
                     } else {
-                        Toast.makeText(getContext(), "No predictions found", Toast.LENGTH_SHORT).show();
+                        addressSuggestionsRecyclerView.setVisibility(View.GONE);
                     }
                 } else {
                     // Handle the error

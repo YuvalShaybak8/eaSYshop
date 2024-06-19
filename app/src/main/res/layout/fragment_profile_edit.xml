@@ -145,7 +145,10 @@
                     android:drawablePadding="8dp"
                     android:layout_toEndOf="@id/passwordIcon"
                     android:layout_marginTop="8dp"
-                    android:fontFamily="@font/josefinsans"/>
+                    android:fontFamily="@font/josefinsans"
+                    android:enabled="false"
+                    android:focusable="false"
+                    android:clickable="false"/>
             </RelativeLayout>
 
             <Button

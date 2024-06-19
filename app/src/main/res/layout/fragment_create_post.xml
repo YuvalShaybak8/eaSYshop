@@ -1,48 +1,78 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="8dp"
+    android:background="@color/white"
+    tools:context=".Fragments.CreatePostFragment">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/sell_post"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginBottom="8dp" />
 
-    <EditText
-        android:id="@+id/createPostTitle"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/title"
-        android:layout_marginTop="16dp" />
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_marginBottom="8dp">
 
-    <EditText
-        android:id="@+id/createPostDescription"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/createPostTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/description"
-        android:layout_marginTop="16dp" />
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_marginBottom="8dp">
 
-    <EditText
-        android:id="@+id/createPostPrice"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/createPostDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/price_in_usd"
-        android:inputType="numberDecimal"
-        android:layout_marginTop="16dp" />
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_marginBottom="8dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/createPostPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="16dp">
+        android:layout_marginBottom="8dp"
+        android:gravity="center_vertical">
 
         <ImageView
             android:id="@+id/userLocation"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:src="@drawable/ic_location_pin"
             android:contentDescription="@string/pickup_address" />
 
@@ -52,61 +82,80 @@
             android:layout_height="wrap_content"
             android:text="@string/pickup_address"
             android:textStyle="bold"
-            android:layout_marginStart="8dp" />
-
+            android:layout_marginStart="8dp"
+            android:textColor="@color/black" />
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/createPostAddress"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/address"
-        android:layout_marginTop="8dp" />
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_marginBottom="8dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/createPostAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:maxLines="1" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/addressSuggestionsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginBottom="8dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center_horizontal">
+        android:layout_marginBottom="8dp"
+        android:gravity="center_horizontal"
+        android:weightSum="3">
 
         <ImageView
             android:id="@+id/createPostImage1"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
             android:src="@drawable/add_image"
             android:contentDescription="@string/upload_images"
             android:clickable="true"
-            android:padding="8dp"/>
+            android:padding="8dp"
+            android:layout_marginEnd="4dp" />
 
         <ImageView
             android:id="@+id/createPostImage2"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
             android:src="@drawable/add_image"
             android:contentDescription="@string/upload_images"
             android:clickable="true"
             android:padding="8dp"
-            android:layout_marginStart="8dp"/>
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp" />
 
         <ImageView
             android:id="@+id/createPostImage3"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
             android:src="@drawable/add_image"
             android:contentDescription="@string/upload_images"
             android:clickable="true"
             android:padding="8dp"
-            android:layout_marginStart="8dp"/>
+            android:layout_marginStart="4dp" />
     </LinearLayout>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/createPostSubmitButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/submit"
-        android:background="@color/colorAccent"
-        android:textColor="@android:color/white"
-        android:layout_marginTop="16dp" />
-
+        android:layout_marginTop="8dp"
+        style="@style/Widget.MaterialComponents.Button" />
 </LinearLayout>

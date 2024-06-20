@@ -46,7 +46,7 @@ public class CreatePostFragment extends Fragment {
     private EditText editTextDescription;
     private EditText editTextPrice;
     private EditText editTextAddress;
-    private ImageView imageView1, imageView2, imageView3;
+    private ImageView imageView1;
     private Button buttonCreatePost;
     private RecyclerView addressSuggestionsRecyclerView;
     private AddressSuggestionsAdapter addressSuggestionsAdapter;
@@ -68,8 +68,7 @@ public class CreatePostFragment extends Fragment {
         editTextPrice = view.findViewById(R.id.createPostPrice);
         editTextAddress = view.findViewById(R.id.createPostAddress);
         imageView1 = view.findViewById(R.id.createPostImage1);
-        imageView2 = view.findViewById(R.id.createPostImage2);
-        imageView3 = view.findViewById(R.id.createPostImage3);
+
         buttonCreatePost = view.findViewById(R.id.createPostSubmitButton);
         addressSuggestionsRecyclerView = view.findViewById(R.id.addressSuggestionsRecyclerView);
 
@@ -78,8 +77,7 @@ public class CreatePostFragment extends Fragment {
         placesClient = Places.createClient(requireContext());
 
         imageView1.setOnClickListener(v -> openImageSelector(1));
-        imageView2.setOnClickListener(v -> openImageSelector(2));
-        imageView3.setOnClickListener(v -> openImageSelector(3));
+
 
         addressSuggestionsAdapter = new AddressSuggestionsAdapter(new ArrayList<>(), suggestion -> {
             editTextAddress.setText(suggestion);
@@ -95,28 +93,25 @@ public class CreatePostFragment extends Fragment {
             double price = editTextPrice.getText().toString().isEmpty() ? 0.0 : Double.parseDouble(editTextPrice.getText().toString());
             String address = editTextAddress.getText().toString();
 
-            if (title.isEmpty() || description.isEmpty() || price <= 0 || address.isEmpty() || imageUri1 == null || imageUri2 == null || imageUri3 == null) {
-                Toast.makeText(getContext(), "Please fill all the fields and upload images", Toast.LENGTH_SHORT).show();
+            if (title.isEmpty() || description.isEmpty() || price <= 0 || address.isEmpty() ) {
+                Toast.makeText(getContext(), "Please fill all the fields and upload at least one image", Toast.LENGTH_SHORT).show();
             }
-            //else {
+            else {
                 // Create a new post
-//                PostModel post = new PostModel(title, description, address, price, "stamp", "222"); // Dummy values for image and ownerID
-//                fs.collection("posts").add(post);
-//
-//                // Clear the fields
-//                editTextTitle.setText("");
-//                editTextDescription.setText("");
-//                editTextPrice.setText("");
-//                editTextAddress.setText("");
-//                imageView1.setImageResource(R.drawable.add_image);
-//                imageView2.setImageResource(R.drawable.add_image);
-//                imageView3.setImageResource(R.drawable.add_image);
-//                imageUri1 = null;
-//                imageUri2 = null;
-//                imageUri3 = null;
-           // }
-            PostModel post = new PostModel(title, description, price, address, "222");
-            fs.collection("posts").add(post);
+                PostModel post = new PostModel(title, description, address, price, "stamp", "222"); // Dummy values for image and ownerID
+                fs.collection("posts").add(post);
+                Toast.makeText(getContext(), "Post created successfully", Toast.LENGTH_SHORT).show();
+                // Clear the fields
+                editTextTitle.setText("");
+                editTextDescription.setText("");
+                editTextPrice.setText("");
+                editTextAddress.setText("");
+                imageView1.setImageResource(R.drawable.add_image);
+
+                imageUri1 = null;
+
+            }
+
 
         });
 
@@ -193,14 +188,7 @@ public class CreatePostFragment extends Fragment {
                     imageUri1 = selectedImageUri;
                     imageView1.setImageURI(imageUri1);
                     break;
-                case REQUEST_IMAGE_PICK + 2:
-                    imageUri2 = selectedImageUri;
-                    imageView2.setImageURI(imageUri2);
-                    break;
-                case REQUEST_IMAGE_PICK + 3:
-                    imageUri3 = selectedImageUri;
-                    imageView3.setImageURI(imageUri3);
-                    break;
+
             }
         }
     }

@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -28,7 +27,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.easyshop.Model.UserModel;
 import com.example.easyshop.R;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
@@ -49,6 +49,7 @@ public class ProfileFragment extends Fragment {
     private String profilePicUrl;
 
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
     private String loggedInUserID;
 
     public ProfileFragment() {
@@ -59,8 +60,9 @@ public class ProfileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Initialize Firestore
+        // Initialize Firestore and Auth
         db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -69,8 +71,15 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile_edit, container, false);
 
-        // Get logged in user's ID from shared preferences or wherever you store it
-        loggedInUserID = getActivity().getSharedPreferences("MyApp", Context.MODE_PRIVATE).getString("userID", "");
+        // Get logged in user's ID from Firebase Auth
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            loggedInUserID = currentUser.getUid();
+        } else {
+            // Handle the case where the user is not logged in
+            Toast.makeText(getContext(), "User not logged in", Toast.LENGTH_SHORT).show();
+            return view;
+        }
 
         // Initialize views
         profileImage = view.findViewById(R.id.profile_image);
@@ -146,10 +155,25 @@ public class ProfileFragment extends Fragment {
                             if (user != null) {
                                 usernameEditText.setText(user.getUsername());
                                 emailEditText.setText(user.getEmail());
-                                passwordEditText.setText(user.getPassword()); // Use this with caution
-                                if (user.getProfilePicUrl() != null) {
-                                    profilePicUrl = user.getProfilePicUrl();
-                                    Picasso.get().load(profilePicUrl).into(profileImage);
+                                passwordEditText.setText("******"); // Masked password
+
+                                // Load profile image
+                                profilePicUrl = user.getProfilePicUrl();
+                                if (profilePicUrl != null && !profilePicUrl.isEmpty()) {
+                                    if (profilePicUrl.startsWith("drawable/")) {
+                                        // Load local drawable resource
+                                        int resourceId = getResources().getIdentifier(profilePicUrl.replace("drawable/", ""), "drawable", getContext().getPackageName());
+                                        if (resourceId != 0) {
+                                            profileImage.setImageResource(resourceId);
+                                        } else {
+                                            profileImage.setImageResource(R.drawable.avatar1);
+                                        }
+                                    } else {
+                                        // Load image from URL
+                                        Picasso.get().load(profilePicUrl).into(profileImage);
+                                    }
+                                } else {
+                                    profileImage.setImageResource(R.drawable.avatar1);
                                 }
                             }
                         }

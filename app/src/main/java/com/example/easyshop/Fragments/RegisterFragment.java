@@ -19,8 +19,11 @@ import androidx.fragment.app.Fragment;
 
 import com.example.easyshop.Model.UserModel;
 import com.example.easyshop.R;
+import com.example.easyshop.activities.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.mindrot.jbcrypt.BCrypt;
 
 public class RegisterFragment extends Fragment {
 
@@ -95,27 +98,41 @@ public class RegisterFragment extends Fragment {
             return;
         }
 
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        UserModel user = new UserModel(name, email, password);
+                        UserModel user = new UserModel(name, email, hashedPassword);
                         db.collection("users").document(mAuth.getCurrentUser().getUid())
                                 .set(user)
                                 .addOnSuccessListener(aVoid -> {
                                     Toast.makeText(getActivity(), "User registered successfully", Toast.LENGTH_SHORT).show();
-                                    // Navigate to LoginFragment after successful registration
-                                    getParentFragmentManager().beginTransaction()
-                                            .replace(R.id.fragment_container, new LoginFragment())
-                                            .commit();
+                                    navigateToHomeFragment();
                                 })
-                                .addOnFailureListener(e -> Toast.makeText(getActivity(), "Failed to register user", Toast.LENGTH_SHORT).show());
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(getActivity(), "Failed to register user", Toast.LENGTH_SHORT).show();
+                                    // Re-enable the register button and hide the progress bar
+                                    registerButton.setEnabled(true);
+                                    progressBar.setVisibility(View.GONE);
+                                });
                     } else {
                         Toast.makeText(getActivity(), "Registration failed", Toast.LENGTH_SHORT).show();
+                        // Re-enable the register button and hide the progress bar
+                        registerButton.setEnabled(true);
+                        progressBar.setVisibility(View.GONE);
                     }
-
-                    // Re-enable the register button and hide the progress bar after registration attempt
-                    registerButton.setEnabled(true);
-                    progressBar.setVisibility(View.GONE);
                 });
+    }
+
+    private void navigateToHomeFragment() {
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new HomeFragment())
+                .commit();
+
+        // Notify MainActivity to update the UI
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).updateUIForFragment(new HomeFragment());
+        }
     }
 }

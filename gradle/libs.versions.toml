@@ -17,6 +17,10 @@ navigationFragmentKtx = "2.3.5"
 navigationUiKtx = "2.3.5"
 googlePlaces = "2.4.0"
 volley = "1.2.1"
+roomCommon = "2.6.1"
+roomRuntime = "2.6.1"
+roomCompiler = "2.6.1"
+bcrypt = "0.4"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -42,8 +46,13 @@ picasso = { group = "com.squareup.picasso", name = "picasso", version = "2.8" }
 # Google Places API
 google-places = { group = "com.google.android.libraries.places", name = "places", version.ref = "googlePlaces" }
 
+bcrypt = { group = "org.mindrot", name = "jbcrypt", version.ref = "bcrypt" }
+
 # Volley
 volley = { group = "com.android.volley", name = "volley", version.ref = "volley" }
+room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntime" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

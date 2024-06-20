@@ -37,6 +37,8 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.constraintlayout)
     implementation(libs.firebase.firestore)
+    implementation(libs.room.common)
+    implementation(libs.room.runtime)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -56,4 +58,7 @@ dependencies {
 
     // Volley
     implementation(libs.volley)
+    annotationProcessor(libs.room.compiler)
+
+    implementation(libs.bcrypt)
 }

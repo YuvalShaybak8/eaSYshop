@@ -1,7 +1,6 @@
 package com.example.easyshop.Model;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class UserModel {
     public String name;
@@ -44,13 +43,18 @@ public class UserModel {
         return email;
     }
 
-    // Getter method for password
+    // Getter method for profilePicUrl
+    public String getProfilePicUrl() {
+        return image;
+    }
+
+    // Getter method for password (Use this with caution)
     public String getPassword() {
         return password;
     }
 
-    // Getter method for profilePicUrl
-    public String getProfilePicUrl() {
-        return image;
+    // Setter method for password
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

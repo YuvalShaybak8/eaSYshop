@@ -146,7 +146,7 @@ public class ProfileFragment extends Fragment {
                             if (user != null) {
                                 usernameEditText.setText(user.getUsername());
                                 emailEditText.setText(user.getEmail());
-                                passwordEditText.setText(user.getPassword());
+                                passwordEditText.setText(user.getPassword()); // Use this with caution
                                 if (user.getProfilePicUrl() != null) {
                                     profilePicUrl = user.getProfilePicUrl();
                                     Picasso.get().load(profilePicUrl).into(profileImage);

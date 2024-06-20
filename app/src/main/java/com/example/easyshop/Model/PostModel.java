@@ -16,6 +16,13 @@ public class PostModel {
         this.location = location;
         this.ownerID = ownerID;
     }
+    public PostModel(String title, String description, double price, String location, String ownerID) {
+        this.title = title;
+        this.description = description;
+        this.price = price;
+        this.location = location;
+        this.ownerID = ownerID;
+    }
 
 
 }

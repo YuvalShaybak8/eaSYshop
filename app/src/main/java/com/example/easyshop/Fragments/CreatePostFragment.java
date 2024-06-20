@@ -97,23 +97,27 @@ public class CreatePostFragment extends Fragment {
 
             if (title.isEmpty() || description.isEmpty() || price <= 0 || address.isEmpty() || imageUri1 == null || imageUri2 == null || imageUri3 == null) {
                 Toast.makeText(getContext(), "Please fill all the fields and upload images", Toast.LENGTH_SHORT).show();
-            } else {
-                // Create a new post
-                PostModel post = new PostModel(title, description, address, price, "stamp", "222"); // Dummy values for image and ownerID
-                fs.collection("posts").add(post);
-
-                // Clear the fields
-                editTextTitle.setText("");
-                editTextDescription.setText("");
-                editTextPrice.setText("");
-                editTextAddress.setText("");
-                imageView1.setImageResource(R.drawable.add_image);
-                imageView2.setImageResource(R.drawable.add_image);
-                imageView3.setImageResource(R.drawable.add_image);
-                imageUri1 = null;
-                imageUri2 = null;
-                imageUri3 = null;
             }
+            //else {
+                // Create a new post
+//                PostModel post = new PostModel(title, description, address, price, "stamp", "222"); // Dummy values for image and ownerID
+//                fs.collection("posts").add(post);
+//
+//                // Clear the fields
+//                editTextTitle.setText("");
+//                editTextDescription.setText("");
+//                editTextPrice.setText("");
+//                editTextAddress.setText("");
+//                imageView1.setImageResource(R.drawable.add_image);
+//                imageView2.setImageResource(R.drawable.add_image);
+//                imageView3.setImageResource(R.drawable.add_image);
+//                imageUri1 = null;
+//                imageUri2 = null;
+//                imageUri3 = null;
+           // }
+            PostModel post = new PostModel(title, description, price, address, "222");
+            fs.collection("posts").add(post);
+
         });
 
         // Add a TextWatcher to the address field to trigger autocomplete suggestions

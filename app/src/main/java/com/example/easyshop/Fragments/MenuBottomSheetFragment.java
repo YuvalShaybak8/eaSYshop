@@ -46,7 +46,10 @@ public class MenuBottomSheetFragment extends BottomSheetDialogFragment {
         });
         view.findViewById(R.id.my_posts).setOnClickListener(v -> {
             // Handle My Posts
-            // Add the fragment navigation here
+            getParentFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new MyPostsFragment())
+                    .addToBackStack(null)
+                    .commit();
         });
     }
 

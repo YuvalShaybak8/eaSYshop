@@ -12,19 +12,25 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.easyshop.Model.PostModel;
+import com.example.easyshop.Model.UserModel;
 import com.example.easyshop.R;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
 
     private Context context;
     private List<PostModel> postList;
+    private FirebaseFirestore db;
 
     public PostAdapter(Context context, List<PostModel> postList) {
         this.context = context;
         this.postList = postList;
+        this.db = FirebaseFirestore.getInstance();
     }
 
     @NonNull
@@ -37,13 +43,30 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     @Override
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
         PostModel post = postList.get(position);
-        holder.itemTitleTextView.setText(post.title);
-        holder.itemDescriptionTextView.setText(post.description);
-        holder.itemPriceTextView.setText("Price: $" + post.price);
-        holder.itemLocationTextView.setText("Pickup address: " + post.location);
-        Picasso.get().load(post.image).into(holder.itemImageView);
-        // Here you can set the profile image, name, and other user details
-        // based on the ownerID if you have user details in your database
+        holder.itemTitleTextView.setText(post.getTitle());
+        holder.itemDescriptionTextView.setText(post.getDescription());
+        holder.itemPriceTextView.setText("Price: $" + post.getPrice());
+        holder.itemLocationTextView.setText("Pickup address: " + post.getLocation());
+
+        // Load image
+        Picasso.get().load(post.getImage()).into(holder.itemImageView);
+
+        // Format and set timestamp
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy 'at' HH:mm", Locale.getDefault());
+        String formattedDate = sdf.format(post.getTimestamp().toDate());
+        holder.postTimestampTextView.setText(formattedDate);
+
+        // Fetch user details based on ownerID
+        db.collection("users").document(post.getOwnerID()).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        UserModel user = documentSnapshot.toObject(UserModel.class);
+                        if (user != null) {
+                            holder.userNameTextView.setText(user.getUsername());
+                            Picasso.get().load(user.getProfilePicUrl()).into(holder.profileImage);
+                        }
+                    }
+                });
     }
 
     @Override
@@ -52,12 +75,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     }
 
     public static class PostViewHolder extends RecyclerView.ViewHolder {
-        ImageView itemImageView;
-        TextView itemTitleTextView, itemDescriptionTextView, itemPriceTextView, itemLocationTextView;
+        ImageView profileImage, itemImageView;
+        TextView userNameTextView, postTimestampTextView, itemTitleTextView, itemDescriptionTextView, itemPriceTextView, itemLocationTextView;
         Button buyButton;
 
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
+            profileImage = itemView.findViewById(R.id.profileImage);
+            userNameTextView = itemView.findViewById(R.id.userNameTextView);
+            postTimestampTextView = itemView.findViewById(R.id.postTimestampTextView);
             itemImageView = itemView.findViewById(R.id.itemImageView);
             itemTitleTextView = itemView.findViewById(R.id.itemTitleTextView);
             itemDescriptionTextView = itemView.findViewById(R.id.itemDescriptionTextView);

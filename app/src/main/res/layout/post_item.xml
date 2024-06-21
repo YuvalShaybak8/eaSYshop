@@ -28,24 +28,31 @@
             android:layout_marginStart="16dp">
 
             <TextView
-                android:id="@+id/userLocationTextView"
+                android:id="@+id/userNameTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
-                android:text="User Location" />
+                android:text="Username" />
 
             <TextView
-                android:id="@+id/itemTitleTextView"
+                android:id="@+id/postTimestampTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
                 android:textColor="@android:color/black"
-                android:text="Item Title" />
+                android:text="Timestamp" />
 
         </LinearLayout>
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/itemTitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="8dp" />
 
     <ImageView
         android:id="@+id/itemImageView"

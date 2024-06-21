@@ -37,9 +37,10 @@ import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.Timestamp;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -109,7 +110,7 @@ public class CreatePostFragment extends Fragment {
                 Timestamp timestamp = Timestamp.now();
 
                 // Create a new post
-                PostModel post = new PostModel(title, description, address, price, "stamp", ownerID, timestamp); // Dummy value for image
+                PostModel post = new PostModel(title, description, imageUri1.toString(), price, address, ownerID, timestamp);
                 fs.collection("posts").add(post)
                         .addOnSuccessListener(documentReference -> {
                             Toast.makeText(getContext(), "Post created successfully", Toast.LENGTH_SHORT).show();

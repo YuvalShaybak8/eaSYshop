@@ -48,7 +48,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.itemPriceTextView.setText("Price: $" + post.getPrice());
         holder.itemLocationTextView.setText("Pickup address: " + post.getLocation());
 
-        // Load image
+        // Load post image
         Picasso.get().load(post.getImage()).into(holder.itemImageView);
 
         // Format and set timestamp
@@ -63,7 +63,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                         UserModel user = documentSnapshot.toObject(UserModel.class);
                         if (user != null) {
                             holder.userNameTextView.setText(user.getUsername());
-                            Picasso.get().load(user.getProfilePicUrl()).into(holder.profileImage);
+                            if (user.getProfilePicUrl() != null && !user.getProfilePicUrl().isEmpty()) {
+                                Picasso.get().load(user.getProfilePicUrl()).into(holder.profileImage);
+                            } else {
+                                holder.profileImage.setImageResource(R.drawable.avatar1); // Default avatar
+                            }
                         }
                     }
                 });

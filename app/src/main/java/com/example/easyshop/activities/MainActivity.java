@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Set profile picture
-        String profilePicUrl = "url_to_profile_picture"; // Replace with actual URL
+        String profilePicUrl = "@drawable/avatar1"; // Replace with your profile picture URL
         if (!profilePicUrl.isEmpty()) {
             Picasso.get().load(profilePicUrl).into(profilePic);
         } else {

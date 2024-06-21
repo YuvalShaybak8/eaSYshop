@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -91,7 +92,7 @@ public class CreatePostFragment extends Fragment {
 
         addressSuggestionsAdapter = new AddressSuggestionsAdapter(new ArrayList<>(), suggestion -> {
             editTextAddress.setText(suggestion);
-            addressSuggestionsRecyclerView.setVisibility(View.GONE);
+            addressSuggestionsRecyclerView.setVisibility(View.GONE); // Hide the dropdown after selection
         });
 
         addressSuggestionsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -111,6 +112,7 @@ public class CreatePostFragment extends Fragment {
 
                 // Create a new post
                 PostModel post = new PostModel(title, description, imageUri1.toString(), price, address, ownerID, timestamp);
+                fs.collection("users").document(ownerID).collection("posts").add(post);
                 fs.collection("posts").add(post)
                         .addOnSuccessListener(documentReference -> {
                             Toast.makeText(getContext(), "Post created successfully", Toast.LENGTH_SHORT).show();
@@ -145,6 +147,21 @@ public class CreatePostFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
             }
+        });
+
+        // Add a focus change listener to dismiss the suggestions dropdown when focus is lost
+        editTextAddress.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                addressSuggestionsRecyclerView.setVisibility(View.GONE);
+            }
+        });
+
+        // Add a touch listener to the root view to dismiss the suggestions dropdown when clicking outside
+        view.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                addressSuggestionsRecyclerView.setVisibility(View.GONE);
+            }
+            return false;
         });
 
         return view;

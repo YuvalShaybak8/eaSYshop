@@ -22,18 +22,23 @@ import com.example.easyshop.R;
 
 
 public class MyPostsFragment extends Fragment   {
-    private FirebaseFirestore fs = FirebaseFirestore.getInstance();
+    private FirebaseFirestore fs;
     private RecyclerView recyclerView;
     private PostAdapter postAdapter;
     private List<PostModel> postList;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private FirebaseAuth auth = FirebaseAuth.getInstance();
-    private String userId = auth.getCurrentUser().getUid();
+    private FirebaseAuth mAuth;
+    private String userId;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_posts, container, false);
+
+        fs = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        userId = mAuth.getCurrentUser().getUid();
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -52,7 +57,7 @@ public class MyPostsFragment extends Fragment   {
 
     private void loadPosts() {
         swipeRefreshLayout.setRefreshing(true);
-        fs.collection("posts").whereEqualTo("userId", userId)
+        fs.collection("posts").whereEqualTo("ownerID", userId)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {

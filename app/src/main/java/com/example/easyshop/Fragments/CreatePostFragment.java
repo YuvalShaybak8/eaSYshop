@@ -2,7 +2,10 @@ package com.example.easyshop.Fragments;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,6 +21,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,14 +37,18 @@ import com.google.android.libraries.places.api.model.AutocompletePrediction;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.Timestamp;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CreatePostFragment extends Fragment {
 
-    private static final int REQUEST_IMAGE_PICK = 1;
+    private static final int PICK_IMAGE_REQUEST = 71;
+    private static final int CAMERA_REQUEST_CODE = 101;
 
     private EditText editTextTitle;
     private EditText editTextDescription;
@@ -50,8 +58,9 @@ public class CreatePostFragment extends Fragment {
     private Button buttonCreatePost;
     private RecyclerView addressSuggestionsRecyclerView;
     private AddressSuggestionsAdapter addressSuggestionsAdapter;
-    private Uri imageUri1, imageUri2, imageUri3;
+    private Uri imageUri1;
     private FirebaseFirestore fs;
+    private FirebaseAuth mAuth;
     private PlacesClient placesClient;
 
     public CreatePostFragment() {
@@ -62,6 +71,7 @@ public class CreatePostFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create_post, container, false);
         fs = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         editTextTitle = view.findViewById(R.id.createPostTitle);
         editTextDescription = view.findViewById(R.id.createPostDescription);
@@ -76,8 +86,7 @@ public class CreatePostFragment extends Fragment {
         Places.initialize(requireContext(), "AIzaSyAE412NbG66NdE68Fap8_ncqt_crHnxYTE");
         placesClient = Places.createClient(requireContext());
 
-        imageView1.setOnClickListener(v -> openImageSelector(1));
-
+        imageView1.setOnClickListener(v -> openImageSelector());
 
         addressSuggestionsAdapter = new AddressSuggestionsAdapter(new ArrayList<>(), suggestion -> {
             editTextAddress.setText(suggestion);
@@ -93,26 +102,28 @@ public class CreatePostFragment extends Fragment {
             double price = editTextPrice.getText().toString().isEmpty() ? 0.0 : Double.parseDouble(editTextPrice.getText().toString());
             String address = editTextAddress.getText().toString();
 
-            if (title.isEmpty() || description.isEmpty() || price <= 0 || address.isEmpty() ) {
+            if (title.isEmpty() || description.isEmpty() || price <= 0 || address.isEmpty()) {
                 Toast.makeText(getContext(), "Please fill all the fields and upload at least one image", Toast.LENGTH_SHORT).show();
-            }
-            else {
+            } else {
+                String ownerID = mAuth.getCurrentUser().getUid();
+                Timestamp timestamp = Timestamp.now();
+
                 // Create a new post
-                PostModel post = new PostModel(title, description, address, price, "stamp", "222"); // Dummy values for image and ownerID
-                fs.collection("posts").add(post);
-                Toast.makeText(getContext(), "Post created successfully", Toast.LENGTH_SHORT).show();
-                // Clear the fields
-                editTextTitle.setText("");
-                editTextDescription.setText("");
-                editTextPrice.setText("");
-                editTextAddress.setText("");
-                imageView1.setImageResource(R.drawable.add_image);
+                PostModel post = new PostModel(title, description, address, price, "stamp", ownerID, timestamp); // Dummy value for image
+                fs.collection("posts").add(post)
+                        .addOnSuccessListener(documentReference -> {
+                            Toast.makeText(getContext(), "Post created successfully", Toast.LENGTH_SHORT).show();
+                            // Clear the fields
+                            editTextTitle.setText("");
+                            editTextDescription.setText("");
+                            editTextPrice.setText("");
+                            editTextAddress.setText("");
+                            imageView1.setImageResource(R.drawable.add_image);
 
-                imageUri1 = null;
-
+                            imageUri1 = null;
+                        })
+                        .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to create post", Toast.LENGTH_SHORT).show());
             }
-
-
         });
 
         // Add a TextWatcher to the address field to trigger autocomplete suggestions
@@ -136,6 +147,23 @@ public class CreatePostFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void openImageSelector() {
+        String[] options = {"Take Photo", "Choose from Gallery"};
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(getContext());
+        builder.setTitle("Select Image")
+                .setItems(options, (dialog, which) -> {
+                    if (which == 0) {
+                        ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
+                    } else if (which == 1) {
+                        Intent intent = new Intent();
+                        intent.setType("image/*");
+                        intent.setAction(Intent.ACTION_GET_CONTENT);
+                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+                    }
+                });
+        builder.show();
     }
 
     private void getAutocompleteSuggestions(String query) {
@@ -172,10 +200,11 @@ public class CreatePostFragment extends Fragment {
         });
     }
 
-    private void openImageSelector(int imageViewNumber) {
-        Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        pickPhoto.setType("image/*");
-        startActivityForResult(pickPhoto, REQUEST_IMAGE_PICK + imageViewNumber);
+    private Uri getImageUri(Context context, Bitmap bitmap) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), bitmap, "Title", null);
+        return Uri.parse(path);
     }
 
     @Override
@@ -184,12 +213,26 @@ public class CreatePostFragment extends Fragment {
         if (resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri selectedImageUri = data.getData();
             switch (requestCode) {
-                case REQUEST_IMAGE_PICK + 1:
+                case PICK_IMAGE_REQUEST:
                     imageUri1 = selectedImageUri;
                     imageView1.setImageURI(imageUri1);
                     break;
-
+                case CAMERA_REQUEST_CODE:
+                    Bitmap photo = (Bitmap) data.getExtras().get("data");
+                    imageView1.setImageBitmap(photo);
+                    // Convert bitmap to Uri
+                    imageUri1 = getImageUri(getContext(), photo);
+                    break;
             }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CAMERA_REQUEST_CODE) {
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
         }
     }
 }

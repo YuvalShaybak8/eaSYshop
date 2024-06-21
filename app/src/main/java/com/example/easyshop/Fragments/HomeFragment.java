@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.easyshop.Adapters.PostAdapter;
 import com.example.easyshop.Model.PostModel;
@@ -25,13 +26,19 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerView;
     private PostAdapter postAdapter;
     private List<PostModel> postList;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home_page, container, false);
+
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(this::loadPosts);
+
         postList = new ArrayList<>();
         postAdapter = new PostAdapter(getContext(), postList);
         recyclerView.setAdapter(postAdapter);
@@ -42,6 +49,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadPosts() {
+        swipeRefreshLayout.setRefreshing(true);
         fs.collection("posts")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -55,6 +63,7 @@ public class HomeFragment extends Fragment {
                     } else {
                         // Handle the error
                     }
+                    swipeRefreshLayout.setRefreshing(false);
                 });
     }
 }

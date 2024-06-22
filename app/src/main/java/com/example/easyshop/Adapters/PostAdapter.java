@@ -21,7 +21,6 @@ import com.example.easyshop.Fragments.HomeFragment;
 import com.example.easyshop.Model.PostModel;
 import com.example.easyshop.Model.UserModel;
 import com.example.easyshop.R;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
@@ -176,12 +175,44 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             db.collection("posts").document(post.getPostID())
                     .set(post)
                     .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(context, "Post updated successfully", Toast.LENGTH_SHORT).show();
-                        FragmentActivity activity = (FragmentActivity) context;
-                        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.fragment_container, new HomeFragment());
-                        transaction.addToBackStack(null);
-                        transaction.commit();
+                        // Step 2: Update the PostModel object in the user's "myPosts" array
+                        db.collection("users").document(post.getOwnerID())
+                                .get()
+                                .addOnSuccessListener(documentSnapshot -> {
+                                    if (documentSnapshot.exists()) {
+                                        UserModel user = documentSnapshot.toObject(UserModel.class);
+                                        if (user != null && user.myPosts != null) {
+                                            // Find the post to update
+                                            for (PostModel userPost : user.myPosts) {
+                                                if (userPost.getPostID().equals(post.getPostID())) {
+                                                    userPost.setTitle(newTitle);
+                                                    userPost.setDescription(newDescription);
+                                                    break;
+                                                }
+                                            }
+                                            // Update the user's myPosts array in Firestore
+                                            db.collection("users").document(post.getOwnerID())
+                                                    .set(user)
+                                                    .addOnSuccessListener(aVoid1 -> {
+                                                        // Notify the user and update UI only after both operations succeed
+                                                        Toast.makeText(context, "Post updated successfully", Toast.LENGTH_SHORT).show();
+                                                        FragmentActivity activity = (FragmentActivity) context;
+                                                        FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+                                                        transaction.replace(R.id.fragment_container, new HomeFragment());
+                                                        transaction.addToBackStack(null);
+                                                        transaction.commit();
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                        // Handle failure to update the user's myPosts array
+                                                        Toast.makeText(context, "Failed to update user posts", Toast.LENGTH_SHORT).show();
+                                                    });
+                                        }
+                                    }
+                                })
+                                .addOnFailureListener(e -> {
+                                    // Handle failure to get the user document
+                                    Toast.makeText(context, "Failed to get user data", Toast.LENGTH_SHORT).show();
+                                });
                     })
                     .addOnFailureListener(e -> Toast.makeText(context, "Failed to update post", Toast.LENGTH_SHORT).show());
         });

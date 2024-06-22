@@ -40,7 +40,7 @@ public class HomeFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(this::loadPosts);
 
         postList = new ArrayList<>();
-        postAdapter = new PostAdapter(getContext(), postList);
+        postAdapter = new PostAdapter(getContext(), postList, false); // Pass false for HomeFragment
         recyclerView.setAdapter(postAdapter);
 
         loadPosts();
@@ -48,8 +48,10 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    private void loadPosts() {
-        swipeRefreshLayout.setRefreshing(true);
+    public void loadPosts() {
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setRefreshing(true);
+        }
         fs.collection("posts")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -57,13 +59,16 @@ public class HomeFragment extends Fragment {
                         postList.clear();
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             PostModel post = document.toObject(PostModel.class);
+                            post.setPostID(document.getId()); // Set postID if not already set
                             postList.add(post);
                         }
                         postAdapter.notifyDataSetChanged();
                     } else {
                         // Handle the error
                     }
-                    swipeRefreshLayout.setRefreshing(false);
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
                 });
     }
 }

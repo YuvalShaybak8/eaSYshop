@@ -12,5 +12,8 @@
     <color name="primary_color">#F7706EFF</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="colorDelete">#F60925</color>
+    <color name="colorEdit">#FF5722</color>
+
 
 </resources>

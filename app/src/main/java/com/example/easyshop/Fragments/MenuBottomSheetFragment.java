@@ -25,14 +25,14 @@ public class MenuBottomSheetFragment extends BottomSheetDialogFragment {
         view.findViewById(R.id.logout).setOnClickListener(v -> {
             // Handle Logout
             if (getActivity() instanceof MainActivity) {
-                ((MainActivity) getActivity()).replaceFragment(new LoginFragment());
+                ((MainActivity) getActivity()).replaceFragment(new LoginFragment(), false);
                 dismiss();
             }
         });
         view.findViewById(R.id.my_profile).setOnClickListener(v -> {
             // Handle My Profile
             if (getActivity() instanceof MainActivity) {
-                ((MainActivity) getActivity()).replaceFragment(new ProfileFragment());
+                ((MainActivity) getActivity()).replaceFragment(new ProfileFragment(), false);
                 dismiss();
             }
         });
@@ -46,10 +46,10 @@ public class MenuBottomSheetFragment extends BottomSheetDialogFragment {
         });
         view.findViewById(R.id.my_posts).setOnClickListener(v -> {
             // Handle My Posts
-            getParentFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new MyPostsFragment())
-                    .addToBackStack(null)
-                    .commit();
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).replaceFragment(new MyPostsFragment(), false);
+                dismiss();
+            }
         });
     }
 

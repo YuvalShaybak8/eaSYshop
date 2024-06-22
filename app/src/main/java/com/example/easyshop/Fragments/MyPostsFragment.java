@@ -1,27 +1,28 @@
 package com.example.easyshop.Fragments;
-import androidx.fragment.app.Fragment;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.Filter;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import java.util.ArrayList;
-import java.util.List;
-import com.example.easyshop.Model.PostModel;
-import com.example.easyshop.Adapters.PostAdapter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.example.easyshop.Adapters.PostAdapter;
+import com.example.easyshop.Model.PostModel;
 import com.example.easyshop.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class MyPostsFragment extends Fragment   {
+public class MyPostsFragment extends Fragment {
     private FirebaseFirestore fs;
     private RecyclerView recyclerView;
     private PostAdapter postAdapter;
@@ -29,7 +30,6 @@ public class MyPostsFragment extends Fragment   {
     private SwipeRefreshLayout swipeRefreshLayout;
     private FirebaseAuth mAuth;
     private String userId;
-
 
     @Nullable
     @Override
@@ -47,7 +47,7 @@ public class MyPostsFragment extends Fragment   {
         swipeRefreshLayout.setOnRefreshListener(this::loadPosts);
 
         postList = new ArrayList<>();
-        postAdapter = new PostAdapter(getContext(), postList);
+        postAdapter = new PostAdapter(getContext(), postList, true); // Pass true for MyPostsFragment
         recyclerView.setAdapter(postAdapter);
 
         loadPosts();
@@ -64,13 +64,12 @@ public class MyPostsFragment extends Fragment   {
                         postList.clear();
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             PostModel post = document.toObject(PostModel.class);
+                            post.setPostID(document.getId()); // Set the postID
                             postList.add(post);
                         }
                         postAdapter.notifyDataSetChanged();
                     }
                     swipeRefreshLayout.setRefreshing(false);
                 });
-
     }
-
 }

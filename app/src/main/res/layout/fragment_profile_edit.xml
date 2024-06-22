@@ -12,36 +12,36 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="8dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="16dp"
                 android:gravity="center">
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profile_image"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center"
-                    android:layout_margin="16dp"
+                    android:layout_margin="8dp"
                     android:background="@drawable/circle_shape"
                     android:contentDescription="@string/profile_image"
-                    android:padding="5dp"
+                    android:padding="3dp"
                     android:scaleType="centerCrop" />
 
                 <ImageButton
                     android:id="@+id/edit_icon"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_alignTop="@+id/profile_image"
                     android:layout_alignEnd="@+id/profile_image"
                     android:layout_alignRight="@+id/profile_image"
-                    android:layout_marginTop="10dp"
-                    android:background="@color/colorAccent"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorPrimary"
                     android:src="@drawable/ic_edit"
                     app:tint="@android:color/white" />
             </RelativeLayout>
@@ -51,8 +51,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/username"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="2dp"
                 android:layout_gravity="start"
                 android:fontFamily="@font/josefinsans"/>
 
@@ -62,8 +62,8 @@
 
                 <ImageView
                     android:id="@+id/profileIcon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/ic_profile"/>
@@ -74,9 +74,9 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/username"
                     android:inputType="text"
-                    android:drawablePadding="8dp"
+                    android:drawablePadding="4dp"
                     android:layout_toEndOf="@id/profileIcon"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:fontFamily="@font/josefinsans"/>
             </RelativeLayout>
 
@@ -85,8 +85,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/email"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="2dp"
                 android:layout_gravity="start"
                 android:fontFamily="@font/josefinsans"/>
 
@@ -96,8 +96,8 @@
 
                 <ImageView
                     android:id="@+id/emailIcon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/ic_email"/>
@@ -108,9 +108,9 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/email"
                     android:inputType="textEmailAddress"
-                    android:drawablePadding="8dp"
+                    android:drawablePadding="4dp"
                     android:layout_toEndOf="@id/emailIcon"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:fontFamily="@font/josefinsans"/>
             </RelativeLayout>
 
@@ -119,8 +119,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/password"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="2dp"
                 android:layout_gravity="start"
                 android:fontFamily="@font/josefinsans"/>
 
@@ -130,8 +130,8 @@
 
                 <ImageView
                     android:id="@+id/passwordIcon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/ic_password"/>
@@ -142,9 +142,9 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/password"
                     android:inputType="textPassword"
-                    android:drawablePadding="8dp"
+                    android:drawablePadding="4dp"
                     android:layout_toEndOf="@id/passwordIcon"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="4dp"
                     android:fontFamily="@font/josefinsans"
                     android:enabled="false"
                     android:focusable="false"
@@ -155,7 +155,7 @@
                 android:id="@+id/update_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:fontFamily="@font/josefinsans"
                 android:text="@string/update"
                 android:backgroundTint="@color/colorPrimary"

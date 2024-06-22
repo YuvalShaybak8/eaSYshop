@@ -15,26 +15,36 @@ import com.example.easyshop.Fragments.LoginFragment;
 import com.example.easyshop.Fragments.MenuBottomSheetFragment;
 import com.example.easyshop.Fragments.ProfileFragment;
 import com.example.easyshop.Fragments.RegisterFragment;
+import com.example.easyshop.Model.UserModel;
 import com.example.easyshop.R;
+import com.example.easyshop.Utils.KeyboardUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-import com.google.android.libraries.places.api.Places;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
 
     private FrameLayout menuContainer;
     private BottomNavigationView bottomNavigationView;
-    private ImageView profilePic;
+    private CircleImageView profilePic;
     private TextView title;
     private View header;
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
+    private String loggedInUserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialize the Places API with your API key
-        Places.initialize(getApplicationContext(), "AIzaSyAE412NbG66NdE68Fap8_ncqt_crHnxYTE");
+        // Initialize Firestore and Auth
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         menuContainer = findViewById(R.id.menu_container);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -43,30 +53,25 @@ public class MainActivity extends AppCompatActivity {
         header = findViewById(R.id.header);
 
         if (savedInstanceState == null) {
-            replaceFragment(new LoginFragment());
+            replaceFragment(new LoginFragment(), false);
         }
 
         // Set profile picture
-        String profilePicUrl = "@drawable/avatar1"; // Replace with your profile picture URL
-        if (!profilePicUrl.isEmpty()) {
-            Picasso.get().load(profilePicUrl).into(profilePic);
-        } else {
-            profilePic.setImageResource(R.drawable.avatar); // default avatar
-        }
+        loadUserProfile();
 
         profilePic.setOnClickListener(v -> {
             // Handle profile picture click to navigate to profile details
-            replaceFragment(new ProfileFragment());
+            replaceFragment(new ProfileFragment(), false);
         });
 
         // Handle bottom navigation item selection
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.action_home) {
-                replaceFragment(new HomeFragment());
+                replaceFragment(new HomeFragment(), false);
                 return true;
             } else if (itemId == R.id.action_create_post) {
-                replaceFragment(new CreatePostFragment());
+                replaceFragment(new CreatePostFragment(), false);
                 return true;
             } else if (itemId == R.id.action_menu) {
                 // Show bottom sheet menu
@@ -85,14 +90,64 @@ public class MainActivity extends AppCompatActivity {
                 updateUIForFragment(currentFragment);
             }
         });
+
+        // Keyboard visibility listener
+        KeyboardUtils.setKeyboardVisibilityListener(this, isVisible -> {
+            if (isVisible) {
+                bottomNavigationView.setVisibility(View.GONE);
+            } else {
+                bottomNavigationView.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
-    public void replaceFragment(Fragment fragment) {
+    private void loadUserProfile() {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        if (mAuth.getCurrentUser() != null) {
+            String loggedInUserID = mAuth.getCurrentUser().getUid();
+            db.collection("users").document(loggedInUserID)
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            UserModel user = documentSnapshot.toObject(UserModel.class);
+                            if (user != null) {
+                                String profilePicUrl = user.getProfilePicUrl();
+                                if (profilePicUrl != null && !profilePicUrl.isEmpty()) {
+                                    Picasso.get().load(profilePicUrl).fit().centerInside().into(profilePic, new Callback() {
+                                        @Override
+                                        public void onSuccess() {
+                                            // Ensure the profile picture fits within the circle shape
+                                            profilePic.setBackgroundResource(R.drawable.circle_shape);
+                                        }
+
+                                        @Override
+                                        public void onError(Exception e) {
+                                            profilePic.setImageResource(R.drawable.avatar1); // default avatar
+                                        }
+                                    });
+                                } else {
+                                    profilePic.setImageResource(R.drawable.avatar1); // default avatar
+                                }
+                            }
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        // Handle any errors here
+                    });
+        }
+    }
+
+    public void replaceFragment(Fragment fragment, boolean refresh) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)
-                .commit();
+                .addToBackStack(null) // Add this line to add the transaction to the back stack
+                .commitAllowingStateLoss(); // Use commitAllowingStateLoss to avoid potential crashes due to state loss
 
         updateUIForFragment(fragment);
+
+        if (refresh && fragment instanceof HomeFragment) {
+            ((HomeFragment) fragment).loadPosts();
+        }
     }
 
     public void updateUIForFragment(Fragment fragment) {

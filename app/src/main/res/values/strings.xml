@@ -36,7 +36,7 @@
     <string name="pickup_location">Pickup location</string>
     <string name="upload_images">Upload images</string>
     <string name="product_image">Product image</string>
-    <string name="submit">Submit</string>
+    <string name="createpost">Create Post</string>
 
     <string-array name="cities">
         <item>Select city</item>

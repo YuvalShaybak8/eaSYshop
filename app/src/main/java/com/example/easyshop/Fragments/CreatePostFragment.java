@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.easyshop.Adapters.AddressSuggestionsAdapter;
 import com.example.easyshop.Model.PostModel;
 import com.example.easyshop.R;
+import com.example.easyshop.activities.MainActivity;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -41,7 +42,6 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -110,24 +110,43 @@ public class CreatePostFragment extends Fragment {
                 String ownerID = mAuth.getCurrentUser().getUid();
                 Timestamp timestamp = Timestamp.now();
 
+                // Ensure imageUri1 is not null
+                String imageUriString = (imageUri1 != null) ? imageUri1.toString() : "";
+
                 // Create a new post
-                PostModel post = new PostModel(title, description, imageUri1.toString(), price, address, ownerID, timestamp);
-                fs.collection("users").document(ownerID).collection("posts").add(post);
+                PostModel post = new PostModel("", title, description, imageUriString, price, address, ownerID, timestamp);
+
+                // Add post to Firestore
                 fs.collection("posts").add(post)
                         .addOnSuccessListener(documentReference -> {
-                            Toast.makeText(getContext(), "Post created successfully", Toast.LENGTH_SHORT).show();
-                            // Clear the fields
-                            editTextTitle.setText("");
-                            editTextDescription.setText("");
-                            editTextPrice.setText("");
-                            editTextAddress.setText("");
-                            imageView1.setImageResource(R.drawable.add_image);
+                            // Set the generated postID
+                            post.setPostID(documentReference.getId());
+                            fs.collection("posts").document(post.getPostID()).set(post)
+                                    .addOnSuccessListener(aVoid -> {
+                                        Toast.makeText(getContext(), "Post created successfully", Toast.LENGTH_SHORT).show();
+                                        // Clear the fields
+                                        editTextTitle.setText("");
+                                        editTextDescription.setText("");
+                                        editTextPrice.setText("");
+                                        editTextAddress.setText("");
+                                        imageView1.setImageResource(R.drawable.add_image);
 
-                            imageUri1 = null;
+                                        imageUri1 = null;
+
+                                        // Navigate back to HomeFragment and refresh posts
+                                        if (getActivity() instanceof MainActivity) {
+                                            MainActivity mainActivity = (MainActivity) getActivity();
+                                            mainActivity.replaceFragment(new HomeFragment(), true); // Passing true to indicate refresh
+                                        }
+                                    })
+                                    .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to create post", Toast.LENGTH_SHORT).show());
                         })
                         .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to create post", Toast.LENGTH_SHORT).show());
             }
         });
+
+
+
 
         // Add a TextWatcher to the address field to trigger autocomplete suggestions
         editTextAddress.addTextChangedListener(new TextWatcher() {

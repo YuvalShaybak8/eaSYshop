@@ -3,19 +3,21 @@ package com.example.easyshop.Model;
 import com.google.firebase.Timestamp;
 
 public class PostModel {
-    public String title;
-    public String description;
-    public String image;
-    public double price;
-    public String location;
-    public String ownerID;
-    public Timestamp timestamp;
+    private String postID;
+    private String title;
+    private String description;
+    private String image;
+    private double price;
+    private String location;
+    private String ownerID;
+    private Timestamp timestamp;
 
     // No-argument constructor
     public PostModel() {
     }
 
-    public PostModel(String title, String description, String image, double price, String location, String ownerID, Timestamp timestamp) {
+    public PostModel(String postID, String title, String description, String image, double price, String location, String ownerID, Timestamp timestamp) {
+        this.postID = postID;
         this.title = title;
         this.description = description;
         this.image = image;
@@ -25,7 +27,15 @@ public class PostModel {
         this.timestamp = timestamp;
     }
 
-    // Getter and Setter methods (optional but recommended)
+    // Getter and Setter methods
+    public String getPostID() {
+        return postID;
+    }
+
+    public void setPostID(String postID) {
+        this.postID = postID;
+    }
+
     public String getTitle() {
         return title;
     }

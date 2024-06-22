@@ -1,12 +1,14 @@
 package com.example.easyshop.Model;
 
+import com.example.easyshop.Model.PostModel;
+
 import java.util.ArrayList;
 
 public class UserModel {
     public String name;
     public String email;
     public String password;
-    public String image;
+    public String profilePicUrl; // Use this name consistently
     public ArrayList<PostModel> myPosts;
     public ArrayList<PostModel> wishList;
     public ArrayList<PostModel> myOrders;
@@ -17,7 +19,7 @@ public class UserModel {
         this.name = "";
         this.email = "";
         this.password = "";
-        this.image = DEFAULT_IMAGE;
+        this.profilePicUrl = DEFAULT_IMAGE;
         this.myPosts = new ArrayList<>();
         this.wishList = new ArrayList<>();
         this.myOrders = new ArrayList<>();
@@ -27,7 +29,7 @@ public class UserModel {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.image = DEFAULT_IMAGE;
+        this.profilePicUrl = DEFAULT_IMAGE;
         this.myPosts = new ArrayList<>();
         this.wishList = new ArrayList<>();
         this.myOrders = new ArrayList<>();
@@ -45,7 +47,7 @@ public class UserModel {
 
     // Getter method for profilePicUrl
     public String getProfilePicUrl() {
-        return image;
+        return profilePicUrl;
     }
 
     // Getter method for password (Use this with caution)

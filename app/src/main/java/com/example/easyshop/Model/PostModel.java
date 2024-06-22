@@ -11,6 +11,8 @@ public class PostModel {
     private String location;
     private String ownerID;
     private Timestamp timestamp;
+    private boolean isPurchased;
+    private String buyerID;
 
     // No-argument constructor
     public PostModel() {
@@ -90,5 +92,21 @@ public class PostModel {
 
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public boolean isPurchased() {
+        return isPurchased;
+    }
+
+    public void setPurchased(boolean purchased) {
+        isPurchased = purchased;
+    }
+
+    public String getBuyerID() {
+        return buyerID;
+    }
+
+    public void setBuyerID(String buyerID) {
+        this.buyerID = buyerID;
     }
 }

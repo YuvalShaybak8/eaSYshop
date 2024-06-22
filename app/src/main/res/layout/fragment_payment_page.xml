@@ -12,14 +12,15 @@
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/credit_card"
-        android:textColor="@android:color/white"
-        android:layout_marginTop="16dp" />
+<!--    <Button-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="@string/credit_card"-->
+<!--        android:textColor="@android:color/white"-->
+<!--        android:layout_marginTop="16dp" />-->
 
     <EditText
+        android:id="@+id/cardNumberEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/card_number"
@@ -27,6 +28,7 @@
         android:layout_marginTop="16dp" />
 
     <EditText
+        android:id="@+id/cardHolderEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/card_holder"
@@ -39,12 +41,14 @@
         android:layout_marginTop="16dp">
 
         <EditText
+            android:id="@+id/expirationDateEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="@string/expiration_date" />
 
         <EditText
+            android:id="@+id/cvvEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -59,6 +63,7 @@
         android:layout_marginTop="16dp" />
 
     <Button
+        android:id="@+id/buyButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/confirm_and_pay"

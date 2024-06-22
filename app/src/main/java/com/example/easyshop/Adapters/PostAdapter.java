@@ -108,8 +108,12 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 });
 
         // Hide "Buy" button if the post belongs to the current user
-        if (post.getOwnerID().equals(currentUserID)) {
+        if (post.getOwnerID().equals(currentUserID)||post.isPurchased()){
             holder.buyButton.setVisibility(View.GONE);
+            if(post.isPurchased()) {
+                holder.buyButton.setText("Purchased");
+                holder.buyButton.setClickable(false);
+            }
         } else {
             holder.buyButton.setVisibility(View.VISIBLE);
         }
@@ -119,7 +123,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             // Navigate to the PaymentFragment
             FragmentActivity activity = (FragmentActivity) context;
             FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, new PaymentFragment());
+            transaction.replace(R.id.fragment_container, new PaymentFragment(post));
             transaction.addToBackStack(null); // Optional: Adds the transaction to the back stack so the user can navigate back
             transaction.commit();
         });

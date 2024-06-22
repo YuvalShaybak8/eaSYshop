@@ -1,165 +1,177 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/colorBackground"
     android:padding="20dp">
 
-    <View
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="@string/app_logo"
-        android:src="@drawable/logo" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/register_title"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginTop="32dp"
-        android:layout_gravity="center_horizontal"
-        android:fontFamily="@font/josefinsans"/>
-
-    <!-- Username Label -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Username"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="4dp"
-        android:layout_gravity="start"
-        android:fontFamily="@font/josefinsans"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/profileIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_profile"/>
-
-        <EditText
-            android:id="@+id/nameEditText"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/name_register"
-            android:inputType="text"
-            android:drawablePadding="8dp"
-            android:layout_toEndOf="@id/profileIcon"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/josefinsans"/>
-    </RelativeLayout>
+            android:orientation="vertical">
 
-    <!-- Email Label -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/email_register"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="4dp"
-        android:layout_gravity="start"
-        android:fontFamily="@font/josefinsans"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
 
-    <EditText
-        android:id="@+id/emailEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/email_login"
-        android:inputType="textEmailAddress"
-        android:drawableStart="@drawable/ic_email"
-        android:drawablePadding="8dp"
-        android:layout_marginTop="8dp"
-        android:fontFamily="@font/josefinsans"/>
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center_horizontal"
+                android:contentDescription="@string/app_logo"
+                android:src="@drawable/logo" />
 
-    <!-- Password Label -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/password_register"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="4dp"
-        android:layout_gravity="start"
-        android:fontFamily="@font/josefinsans"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/register_title"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginTop="32dp"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/josefinsans"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+            <!-- Username Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Username"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="4dp"
+                android:layout_gravity="start"
+                android:fontFamily="@font/josefinsans"/>
 
-        <EditText
-            android:id="@+id/passwordEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/password_login"
-            android:inputType="textPassword"
-            android:drawableStart="@drawable/ic_password"
-            android:drawablePadding="8dp"
-            android:layout_marginTop="8dp"
-            android:paddingEnd="50dp"
-            android:fontFamily="@font/josefinsans" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <ImageButton
-            android:id="@+id/passwordToggle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_hide_password"
-            android:contentDescription="@string/toggle_password_visibility"
-            android:padding="8dp" />
-    </RelativeLayout>
+                <ImageView
+                    android:id="@+id/profileIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_profile"/>
 
-    <Button
-        android:id="@+id/registerButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/register_button"
-        android:color="@color/colorButton"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/josefinsans"/>
+                <EditText
+                    android:id="@+id/nameEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/name_register"
+                    android:inputType="text"
+                    android:drawablePadding="8dp"
+                    android:layout_toEndOf="@id/profileIcon"
+                    android:layout_marginTop="8dp"
+                    android:fontFamily="@font/josefinsans"/>
+            </RelativeLayout>
 
-    <!-- Sign In Button -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="horizontal">
+            <!-- Email Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/email_register"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="4dp"
+                android:layout_gravity="start"
+                android:fontFamily="@font/josefinsans"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/already"
-            android:textColor="@color/colorGeneral"
-            android:fontFamily="@font/josefinsans"/>
+            <EditText
+                android:id="@+id/emailEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/email_login"
+                android:inputType="textEmailAddress"
+                android:drawableStart="@drawable/ic_email"
+                android:drawablePadding="8dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/josefinsans"/>
 
-        <Button
-            android:id="@+id/signInButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Login Here"
-            android:background="@android:color/transparent"
-            android:textColor="@color/colorAccent"
-            android:clickable="true"
-            android:focusable="true"
-            android:fontFamily="@font/josefinsans"/>
+            <!-- Password Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/password_register"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="4dp"
+                android:layout_gravity="start"
+                android:fontFamily="@font/josefinsans"/>
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-    </LinearLayout>
+                <EditText
+                    android:id="@+id/passwordEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/password_login"
+                    android:inputType="textPassword"
+                    android:drawableStart="@drawable/ic_password"
+                    android:drawablePadding="8dp"
+                    android:layout_marginTop="8dp"
+                    android:paddingEnd="50dp"
+                    android:fontFamily="@font/josefinsans" />
 
-</LinearLayout>
+                <ImageButton
+                    android:id="@+id/passwordToggle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_hide_password"
+                    android:contentDescription="@string/toggle_password_visibility"
+                    android:padding="8dp" />
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/registerButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/register_button"
+                android:color="@color/colorButton"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/josefinsans"/>
+
+            <!-- Sign In Button -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/already"
+                    android:textColor="@color/colorGeneral"
+                    android:fontFamily="@font/josefinsans"/>
+
+                <Button
+                    android:id="@+id/signInButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Login Here"
+                    android:background="@android:color/transparent"
+                    android:textColor="@color/colorAccent"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:fontFamily="@font/josefinsans"/>
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

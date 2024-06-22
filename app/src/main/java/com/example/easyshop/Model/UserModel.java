@@ -8,7 +8,7 @@ public class UserModel {
     public String name;
     public String email;
     public String password;
-    public String profilePicUrl; // Use this name consistently
+    public String profilePicUrl;
     public ArrayList<PostModel> myPosts;
     public ArrayList<PostModel> wishList;
     public ArrayList<PostModel> myOrders;
@@ -36,7 +36,7 @@ public class UserModel {
     }
 
     // Getter method for username
-    public String getUsername() {
+    public String getName() {
         return name;
     }
 

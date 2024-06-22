@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.easyshop.R;
+import com.example.easyshop.Utils.KeyboardUtils;
 import com.example.easyshop.activities.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -29,6 +31,7 @@ public class LoginFragment extends Fragment {
     private ImageButton passwordToggle;
     private FirebaseAuth mAuth;
     private boolean isPasswordVisible = false;
+    private ScrollView scrollView;
 
     @Nullable
     @Override
@@ -41,6 +44,7 @@ public class LoginFragment extends Fragment {
         passwordEditText = view.findViewById(R.id.passwordEditText);
         loginButton = view.findViewById(R.id.loginButton);
         passwordToggle = view.findViewById(R.id.passwordToggle);
+        scrollView = view.findViewById(R.id.scrollView);
 
         loginButton.setOnClickListener(v -> loginUserAccount());
 
@@ -62,6 +66,12 @@ public class LoginFragment extends Fragment {
             }
             isPasswordVisible = !isPasswordVisible;
             passwordEditText.setSelection(passwordEditText.length());
+        });
+
+        KeyboardUtils.setKeyboardVisibilityListener(getActivity(), isVisible -> {
+            if (isVisible) {
+                scrollView.post(() -> scrollView.smoothScrollTo(0, emailEditText.getBottom()));
+            }
         });
 
         return view;

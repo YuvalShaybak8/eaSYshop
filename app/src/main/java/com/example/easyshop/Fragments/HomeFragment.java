@@ -15,6 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.easyshop.Adapters.PostAdapter;
 import com.example.easyshop.Model.PostModel;
 import com.example.easyshop.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -23,10 +24,12 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
     private FirebaseFirestore fs = FirebaseFirestore.getInstance();
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private RecyclerView recyclerView;
     private PostAdapter postAdapter;
     private List<PostModel> postList;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private String currentUserID;
 
     @Nullable
     @Override
@@ -40,7 +43,11 @@ public class HomeFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(this::loadPosts);
 
         postList = new ArrayList<>();
-        postAdapter = new PostAdapter(getContext(), postList, false); // Pass false for HomeFragment
+
+        // Get the current user ID
+        currentUserID = mAuth.getCurrentUser().getUid();
+
+        postAdapter = new PostAdapter(getContext(), postList, false, currentUserID); // Pass currentUserID to adapter
         recyclerView.setAdapter(postAdapter);
 
         loadPosts();

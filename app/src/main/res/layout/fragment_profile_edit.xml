@@ -35,15 +35,17 @@
 
                 <ImageButton
                     android:id="@+id/edit_icon"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="end|top"
                     android:layout_alignTop="@+id/profile_image"
                     android:layout_alignEnd="@+id/profile_image"
                     android:layout_alignRight="@+id/profile_image"
-                    android:layout_marginTop="5dp"
-                    android:background="@color/colorPrimary"
+                    android:layout_marginTop="0dp"
+                    android:background="@drawable/circle_background"
                     android:src="@drawable/ic_edit"
                     app:tint="@android:color/white" />
+
             </RelativeLayout>
 
             <!-- Username Label -->
@@ -69,7 +71,7 @@
                     android:src="@drawable/ic_profile"/>
 
                 <EditText
-                    android:id="@+id/username"
+                    android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/username"
@@ -111,7 +113,8 @@
                     android:drawablePadding="4dp"
                     android:layout_toEndOf="@id/emailIcon"
                     android:layout_marginTop="4dp"
-                    android:fontFamily="@font/josefinsans"/>
+                    android:fontFamily="@font/josefinsans"
+                    android:enabled="false"/>
             </RelativeLayout>
 
             <!-- Password Label -->
@@ -147,8 +150,7 @@
                     android:layout_marginTop="4dp"
                     android:fontFamily="@font/josefinsans"
                     android:enabled="false"
-                    android:focusable="false"
-                    android:clickable="false"/>
+                    android:text="********"/>
             </RelativeLayout>
 
             <Button

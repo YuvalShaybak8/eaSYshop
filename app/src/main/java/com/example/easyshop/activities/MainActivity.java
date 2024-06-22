@@ -93,10 +93,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Keyboard visibility listener
         KeyboardUtils.setKeyboardVisibilityListener(this, isVisible -> {
-            if (isVisible) {
+            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+            if (currentFragment instanceof LoginFragment || currentFragment instanceof RegisterFragment) {
                 bottomNavigationView.setVisibility(View.GONE);
             } else {
-                bottomNavigationView.setVisibility(View.VISIBLE);
+                bottomNavigationView.setVisibility(isVisible ? View.GONE : View.VISIBLE);
             }
         });
     }

@@ -1,123 +1,136 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/colorBackground"
     android:padding="16dp"
     android:fontFamily="@font/josefinsans">
 
-    <!-- Spacer to lower all elements on the screen -->
-    <View
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-    <ImageView
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="@string/app_logo"
-        android:src="@drawable/logo" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/login"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginTop="32dp"
-        android:layout_gravity="center_horizontal"
-        android:fontFamily="@font/josefinsans" />
-
-    <!-- Email Label -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Email"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="4dp"
-        android:layout_gravity="start"
-        android:fontFamily="@font/josefinsans"/>
-
-    <EditText
-        android:id="@+id/emailEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/email_login"
-        android:inputType="textEmailAddress"
-        android:drawableStart="@drawable/ic_email"
-        android:drawablePadding="8dp"
-        android:layout_marginTop="8dp"
-        android:fontFamily="@font/josefinsans"/>
-
-    <!-- Password Label -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Password"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="4dp"
-        android:layout_gravity="start"
-        android:fontFamily="@font/josefinsans"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <EditText
-            android:id="@+id/passwordEditText"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/password_login"
-            android:inputType="textPassword"
-            android:drawableStart="@drawable/ic_password"
-            android:drawablePadding="8dp"
-            android:layout_marginTop="8dp"
-            android:paddingEnd="50dp"
-            android:fontFamily="@font/josefinsans" />
+            android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/passwordToggle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_hide_password"
-            android:contentDescription="@string/toggle_password_visibility"
-            android:padding="8dp" />
-    </RelativeLayout>
+            <!-- Spacer to lower all elements on the screen -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
 
-    <Button
-        android:id="@+id/loginButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/login"
-        android:color="@color/colorButton"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/josefinsans" />
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center_horizontal"
+                android:contentDescription="@string/app_logo"
+                android:src="@drawable/logo" />
 
-    <!-- Sign Up Button -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_marginTop="32dp"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/josefinsans" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Don\'t have an account yet?"
-            android:textColor="@color/colorGeneral"
-            android:fontFamily="@font/josefinsans" />
+            <!-- Email Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Email"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="4dp"
+                android:layout_gravity="start"
+                android:fontFamily="@font/josefinsans"/>
 
-        <Button
-            android:id="@+id/signUpButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sign up"
-            android:textColor="@color/colorAccent"
-            android:background="@android:color/transparent"
-            android:fontFamily="@font/josefinsans" />
-    </LinearLayout>
+            <EditText
+                android:id="@+id/emailEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/email_login"
+                android:inputType="textEmailAddress"
+                android:drawableStart="@drawable/ic_email"
+                android:drawablePadding="8dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/josefinsans"/>
 
-</LinearLayout>
+            <!-- Password Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Password"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="4dp"
+                android:layout_gravity="start"
+                android:fontFamily="@font/josefinsans"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/passwordEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/password_login"
+                    android:inputType="textPassword"
+                    android:drawableStart="@drawable/ic_password"
+                    android:drawablePadding="8dp"
+                    android:layout_marginTop="8dp"
+                    android:paddingEnd="50dp"
+                    android:fontFamily="@font/josefinsans" />
+
+                <ImageButton
+                    android:id="@+id/passwordToggle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_hide_password"
+                    android:contentDescription="@string/toggle_password_visibility"
+                    android:padding="8dp" />
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/loginButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/login"
+                android:color="@color/colorButton"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/josefinsans" />
+
+            <!-- Sign Up Button -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Don\'t have an account yet?"
+                    android:textColor="@color/colorGeneral"
+                    android:fontFamily="@font/josefinsans" />
+
+                <Button
+                    android:id="@+id/signUpButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sign up"
+                    android:textColor="@color/colorAccent"
+                    android:background="@android:color/transparent"
+                    android:fontFamily="@font/josefinsans" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

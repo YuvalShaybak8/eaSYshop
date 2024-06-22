@@ -2,11 +2,8 @@ package com.example.easyshop.Fragments;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -29,7 +26,6 @@ import com.example.easyshop.Model.UserModel;
 import com.example.easyshop.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
@@ -43,7 +39,7 @@ public class ProfileFragment extends Fragment {
 
     private ImageView profileImage;
     private ImageButton editIcon;
-    private EditText usernameEditText;
+    private EditText nameEditText;
     private EditText emailEditText;
     private EditText passwordEditText;
     private String profilePicUrl;
@@ -84,7 +80,7 @@ public class ProfileFragment extends Fragment {
         // Initialize views
         profileImage = view.findViewById(R.id.profile_image);
         editIcon = view.findViewById(R.id.edit_icon);
-        usernameEditText = view.findViewById(R.id.username);
+        nameEditText = view.findViewById(R.id.name);
         emailEditText = view.findViewById(R.id.email);
         passwordEditText = view.findViewById(R.id.password);
 
@@ -94,12 +90,9 @@ public class ProfileFragment extends Fragment {
         editIcon.setOnClickListener(v -> showImageSelectionDialog());
 
         view.findViewById(R.id.update_button).setOnClickListener(v -> {
-            String newUsername = usernameEditText.getText().toString();
-            String newEmail = emailEditText.getText().toString();
-            String newPassword = passwordEditText.getText().toString();
-
+            String newName = nameEditText.getText().toString();
             // Update user information
-            updateUserProfile(newUsername, newEmail, newPassword);
+            updateUserProfile(newName);
         });
 
         // Load user information from Firebase
@@ -125,11 +118,12 @@ public class ProfileFragment extends Fragment {
         builder.show();
     }
 
-    private void updateUserProfile(String username, String email, String password) {
-        // Update user profile in Firebase or your server
-        if (!loggedInUserID.isEmpty()) {
+    private void updateUserProfile(String name) {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            // Update the user's profile in Firestore
             db.collection("users").document(loggedInUserID)
-                    .update("username", username, "email", email, "password", password, "profilePicUrl", profilePicUrl)
+                    .update("name", name, "profilePicUrl", profilePicUrl)
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(getContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
                         navigateToHomePage();
@@ -146,16 +140,16 @@ public class ProfileFragment extends Fragment {
     }
 
     private void loadUserProfile() {
-        if (!loggedInUserID.isEmpty()) {
+        if (loggedInUserID != null) {
             db.collection("users").document(loggedInUserID)
                     .get()
                     .addOnSuccessListener(documentSnapshot -> {
                         if (documentSnapshot.exists()) {
                             UserModel user = documentSnapshot.toObject(UserModel.class);
                             if (user != null) {
-                                usernameEditText.setText(user.getUsername());
+                                nameEditText.setText(user.getName());
                                 emailEditText.setText(user.getEmail());
-                                passwordEditText.setText("******"); // Masked password
+                                passwordEditText.setText("********");
 
                                 // Load profile image
                                 profilePicUrl = user.getProfilePicUrl();
@@ -202,6 +196,7 @@ public class ProfileFragment extends Fragment {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImageUri);
                     profileImage.setImageBitmap(bitmap);
                     profilePicUrl = encodeImageToBase64(bitmap);
+                    uploadProfileImageToFirestore(profilePicUrl);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -209,7 +204,21 @@ public class ProfileFragment extends Fragment {
                 Bitmap photo = (Bitmap) data.getExtras().get("data");
                 profileImage.setImageBitmap(photo);
                 profilePicUrl = encodeImageToBase64(photo);
+                uploadProfileImageToFirestore(profilePicUrl);
             }
+        }
+    }
+
+    private void uploadProfileImageToFirestore(String profilePicUrl) {
+        if (loggedInUserID != null) {
+            db.collection("users").document(loggedInUserID)
+                    .update("profilePicUrl", profilePicUrl)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(getContext(), "Profile picture updated", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(getContext(), "Failed to update profile picture", Toast.LENGTH_SHORT).show();
+                    });
         }
     }
 

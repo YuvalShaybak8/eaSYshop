@@ -21,6 +21,7 @@ import com.example.easyshop.Fragments.HomeFragment;
 import com.example.easyshop.Model.PostModel;
 import com.example.easyshop.Model.UserModel;
 import com.example.easyshop.R;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
@@ -37,12 +38,14 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<PostModel> postList;
     private FirebaseFirestore db;
     private boolean isMyPostsPage;
+    private String currentUserID; // Added to store current user's ID
 
-    public PostAdapter(Context context, List<PostModel> postList, boolean isMyPostsPage) {
+    public PostAdapter(Context context, List<PostModel> postList, boolean isMyPostsPage, String currentUserID) {
         this.context = context;
         this.postList = postList;
         this.db = FirebaseFirestore.getInstance();
         this.isMyPostsPage = isMyPostsPage;
+        this.currentUserID = currentUserID; // Initialize with current user's ID
     }
 
     @Override
@@ -95,7 +98,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     if (documentSnapshot.exists()) {
                         UserModel user = documentSnapshot.toObject(UserModel.class);
                         if (user != null) {
-                            holder.userNameTextView.setText(user.getUsername());
+                            holder.userNameTextView.setText(user.getName());
                             if (user.getProfilePicUrl() != null && !user.getProfilePicUrl().isEmpty()) {
                                 Picasso.get().load(user.getProfilePicUrl()).into(holder.profileImage);
                             } else {
@@ -104,6 +107,13 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         }
                     }
                 });
+
+        // Hide "Buy" button if the post belongs to the current user
+        if (post.getOwnerID().equals(currentUserID)) {
+            holder.buyButton.setVisibility(View.GONE);
+        } else {
+            holder.buyButton.setVisibility(View.VISIBLE);
+        }
 
         // Set click listener for the buy button
         holder.buyButton.setOnClickListener(v -> {
@@ -136,7 +146,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     if (documentSnapshot.exists()) {
                         UserModel user = documentSnapshot.toObject(UserModel.class);
                         if (user != null) {
-                            holder.userNameTextView.setText(user.getUsername());
+                            holder.userNameTextView.setText(user.getName());
                             if (user.getProfilePicUrl() != null && !user.getProfilePicUrl().isEmpty()) {
                                 Picasso.get().load(user.getProfilePicUrl()).into(holder.profileImage);
                             } else {
@@ -177,15 +187,58 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         });
 
         holder.deleteButton.setOnClickListener(v -> {
-            db.collection("posts").document(post.getPostID())
+            String postId = post.getPostID();
+            String userId = post.getOwnerID();
+
+            // Step 1: Delete the post from the "posts" collection
+            db.collection("posts").document(postId)
                     .delete()
                     .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(context, "Post deleted successfully", Toast.LENGTH_SHORT).show();
-                        postList.remove(holder.getAdapterPosition());
-                        notifyItemRemoved(holder.getAdapterPosition());
+                        // Step 2: Remove the PostModel object from the user's "myPosts" array
+                        db.collection("users").document(userId)
+                                .get()
+                                .addOnSuccessListener(documentSnapshot -> {
+                                    if (documentSnapshot.exists()) {
+                                        UserModel user = documentSnapshot.toObject(UserModel.class);
+                                        if (user != null && user.myPosts != null) {
+                                            // Find the post to remove
+                                            PostModel postToRemove = null;
+                                            for (PostModel userPost : user.myPosts) {
+                                                if (userPost.getPostID().equals(postId)) {
+                                                    postToRemove = userPost;
+                                                    break;
+                                                }
+                                            }
+                                            if (postToRemove != null) {
+                                                user.myPosts.remove(postToRemove);
+                                                // Update the user's myPosts array in Firestore
+                                                db.collection("users").document(userId)
+                                                        .set(user)
+                                                        .addOnSuccessListener(aVoid1 -> {
+                                                            // Notify the user and update UI only after both operations succeed
+                                                            Toast.makeText(context, "Post deleted successfully", Toast.LENGTH_SHORT).show();
+                                                            postList.remove(holder.getAdapterPosition());
+                                                            notifyItemRemoved(holder.getAdapterPosition());
+                                                        })
+                                                        .addOnFailureListener(e -> {
+                                                            // Handle failure to update the user's myPosts array
+                                                            Toast.makeText(context, "Failed to update user posts", Toast.LENGTH_SHORT).show();
+                                                        });
+                                            }
+                                        }
+                                    }
+                                })
+                                .addOnFailureListener(e -> {
+                                    // Handle failure to get the user document
+                                    Toast.makeText(context, "Failed to get user data", Toast.LENGTH_SHORT).show();
+                                });
                     })
-                    .addOnFailureListener(e -> Toast.makeText(context, "Failed to delete post", Toast.LENGTH_SHORT).show());
+                    .addOnFailureListener(e -> {
+                        // Handle failure to delete the post from the main collection
+                        Toast.makeText(context, "Failed to delete post", Toast.LENGTH_SHORT).show();
+                    });
         });
+
     }
 
     @Override

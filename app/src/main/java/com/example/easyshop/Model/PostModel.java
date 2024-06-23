@@ -4,7 +4,6 @@ import com.google.firebase.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class PostModel {
     private String postID;
     private String title;
@@ -17,7 +16,6 @@ public class PostModel {
     private boolean isPurchased;
     private String buyerID;
     private List<CommentModel> comments;
-    private boolean isInWishlist;
 
     // No-argument constructor
     public PostModel() {
@@ -34,7 +32,6 @@ public class PostModel {
         this.ownerID = ownerID;
         this.timestamp = timestamp;
         this.comments = new ArrayList<>();
-        this.isInWishlist = false;
     }
 
     // Getter and Setter methods
@@ -124,13 +121,5 @@ public class PostModel {
 
     public void setComments(List<CommentModel> comments) {
         this.comments = comments;
-    }
-
-    public boolean isInWishlist() {
-        return isInWishlist;
-    }
-
-    public void setInWishlist(boolean inWishlist) {
-        isInWishlist = inWishlist;
     }
 }

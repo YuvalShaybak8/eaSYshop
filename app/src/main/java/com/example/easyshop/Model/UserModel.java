@@ -1,7 +1,6 @@
 package com.example.easyshop.Model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class UserModel {
@@ -12,7 +11,7 @@ public class UserModel {
     public ArrayList<PostModel> myPosts;
     public ArrayList<PostModel> wishList;
     public ArrayList<PostModel> myOrders;
-    public List<CommentModel> comments; // Add this line
+    public List<CommentModel> comments;
 
     private static final String DEFAULT_IMAGE = "drawable/avatar1.png";
 
@@ -24,7 +23,7 @@ public class UserModel {
         this.myPosts = new ArrayList<>();
         this.wishList = new ArrayList<>();
         this.myOrders = new ArrayList<>();
-        this.comments = new ArrayList<>(); // Initialize comments
+        this.comments = new ArrayList<>();
     }
 
     public UserModel(String name, String email, String password) {
@@ -35,30 +34,25 @@ public class UserModel {
         this.myPosts = new ArrayList<>();
         this.wishList = new ArrayList<>();
         this.myOrders = new ArrayList<>();
-        this.comments = new ArrayList<>(); // Initialize comments
+        this.comments = new ArrayList<>();
     }
 
-    // Getter method for username
     public String getName() {
         return name;
     }
 
-    // Getter method for email
     public String getEmail() {
         return email;
     }
 
-    // Getter method for profilePicUrl
     public String getProfilePicUrl() {
         return profilePicUrl;
     }
 
-    // Getter method for password (Use this with caution)
     public String getPassword() {
         return password;
     }
 
-    // Setter method for password
     public void setPassword(String password) {
         this.password = password;
     }
@@ -71,13 +65,19 @@ public class UserModel {
         this.comments = comments;
     }
 
-    // Getter method for wishList
     public List<PostModel> getWishList() {
         return wishList;
     }
 
-    // Setter method for wishList
     public void setWishList(List<PostModel> wishList) {
         this.wishList = (ArrayList<PostModel>) wishList;
+    }
+
+    public List<PostModel> getMyOrders() {
+        return myOrders;
+    }
+
+    public void setMyOrders(List<PostModel> myOrders) {
+        this.myOrders = (ArrayList<PostModel>) myOrders;
     }
 }

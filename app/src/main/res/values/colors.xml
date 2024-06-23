@@ -14,6 +14,8 @@
     <color name="black">#000000</color>
     <color name="colorDelete">#F60925</color>
     <color name="colorEdit">#FF5722</color>
+    <color name="colorPurchased">#1CC815</color>
+
 
 
 </resources>

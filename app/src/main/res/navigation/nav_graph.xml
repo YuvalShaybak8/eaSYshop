@@ -29,4 +29,9 @@
         android:id="@+id/registerFragment"
         android:name="com.example.easyshop.Fragments.RegisterFragment"
         tools:layout="@layout/fragment_register" />
+
+    <fragment
+        android:id="@+id/wishlistFragment"
+        android:name="com.example.easyshop.Fragments.WishlistFragment"
+        tools:layout="@layout/fragment_wishlist" />
 </navigation>

@@ -14,6 +14,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.easyshop.Adapters.PostAdapter;
 import com.example.easyshop.Model.PostModel;
+import com.example.easyshop.Model.UserModel;
 import com.example.easyshop.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -21,7 +22,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class MyOrdersFragment extends Fragment {
     private FirebaseFirestore fs;
@@ -48,7 +48,7 @@ public class MyOrdersFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(this::loadPosts);
 
         postList = new ArrayList<>();
-        postAdapter = new PostAdapter(getContext(), postList, false, userId);
+        postAdapter = new PostAdapter(getContext(), postList, false, true, userId);
         recyclerView.setAdapter(postAdapter);
 
         loadPosts();
@@ -58,17 +58,19 @@ public class MyOrdersFragment extends Fragment {
 
     private void loadPosts() {
         swipeRefreshLayout.setRefreshing(true);
-        fs.collection("posts").whereEqualTo("buyerID", userId)
-                .get()
+        fs.collection("users").document(userId).get()
                 .addOnCompleteListener(task -> {
-                    postList.clear();
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        PostModel post = document.toObject(PostModel.class);
-                        postList.add(post);
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        UserModel user = task.getResult().toObject(UserModel.class);
+                        if (user != null) {
+                            postList.clear();
+                            postList.addAll(user.getMyOrders());
+                            postAdapter.notifyDataSetChanged();
+                        }
+                    } else {
+                        // Handle the error
                     }
-                    postAdapter.notifyDataSetChanged();
                     swipeRefreshLayout.setRefreshing(false);
                 });
     }
 }
-

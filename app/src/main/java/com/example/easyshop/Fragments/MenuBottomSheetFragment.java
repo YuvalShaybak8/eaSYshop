@@ -38,7 +38,10 @@ public class MenuBottomSheetFragment extends BottomSheetDialogFragment {
         });
         view.findViewById(R.id.my_wish_list).setOnClickListener(v -> {
             // Handle My Wish List
-            // Add the fragment navigation here
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).replaceFragment(new WishlistFragment(), false);
+                dismiss();
+            }
         });
         view.findViewById(R.id.my_orders).setOnClickListener(v -> {
             // Handle My Orders

@@ -47,7 +47,7 @@ public class MyPostsFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(this::loadPosts);
 
         postList = new ArrayList<>();
-        postAdapter = new PostAdapter(getContext(), postList, true, userId); // Pass true for MyPostsFragment and current user ID
+        postAdapter = new PostAdapter(getContext(), postList, true, false, userId); // Pass true for MyPostsFragment and current user ID
         recyclerView.setAdapter(postAdapter);
 
         loadPosts();

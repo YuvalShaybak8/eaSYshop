@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.easyshop.R;
 import com.example.easyshop.Model.PostModel;
+import com.example.easyshop.Model.UserModel;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.auth.FirebaseAuth;
@@ -119,6 +120,8 @@ public class PaymentFragment extends Fragment {
                     String userID = post.getBuyerID();
                     db.collection("users").document(userID).update("myOrders", FieldValue.arrayUnion(post))
                             .addOnSuccessListener(aVoid1 -> {
+                                removeFromGeneralPosts();
+                                removeFromSellerPosts();
                                 Toast.makeText(getContext(), "Purchase successful", Toast.LENGTH_SHORT).show();
                                 FragmentActivity activity = (FragmentActivity) getContext();
                                 FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
@@ -128,5 +131,35 @@ public class PaymentFragment extends Fragment {
                             .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to add to orders", Toast.LENGTH_SHORT).show());
                 })
                 .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to update post", Toast.LENGTH_SHORT).show());
+    }
+
+    private void removeFromGeneralPosts() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("posts").document(post.getPostID()).delete()
+                .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to remove post from general posts", Toast.LENGTH_SHORT).show());
+    }
+
+    private void removeFromSellerPosts() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(post.getOwnerID()).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        UserModel user = documentSnapshot.toObject(UserModel.class);
+                        if (user != null && user.myPosts != null) {
+                            PostModel postToRemove = null;
+                            for (PostModel userPost : user.myPosts) {
+                                if (userPost.getPostID().equals(post.getPostID())) {
+                                    postToRemove = userPost;
+                                    break;
+                                }
+                            }
+                            if (postToRemove != null) {
+                                user.myPosts.remove(postToRemove);
+                                db.collection("users").document(post.getOwnerID()).set(user)
+                                        .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to update seller's posts", Toast.LENGTH_SHORT).show());
+                            }
+                        }
+                    }
+                });
     }
 }

@@ -48,7 +48,7 @@ public class WishlistFragment extends Fragment {
         // Get the current user ID
         currentUserID = mAuth.getCurrentUser().getUid();
 
-        postAdapter = new PostAdapter(getContext(), wishlist, false, currentUserID); // Pass currentUserID to adapter
+        postAdapter = new PostAdapter(getContext(), wishlist, false, false, currentUserID); // Pass currentUserID to adapter
         recyclerView.setAdapter(postAdapter);
 
         loadWishlist();

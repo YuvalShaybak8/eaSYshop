@@ -47,7 +47,7 @@ public class HomeFragment extends Fragment {
         // Get the current user ID
         currentUserID = mAuth.getCurrentUser().getUid();
 
-        postAdapter = new PostAdapter(getContext(), postList, false, currentUserID); // Pass currentUserID to adapter
+        postAdapter = new PostAdapter(getContext(), postList, false, false, currentUserID);
         recyclerView.setAdapter(postAdapter);
 
         loadPosts();

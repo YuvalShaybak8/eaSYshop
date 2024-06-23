@@ -15,6 +15,7 @@ import com.example.easyshop.Fragments.LoginFragment;
 import com.example.easyshop.Fragments.MenuBottomSheetFragment;
 import com.example.easyshop.Fragments.ProfileFragment;
 import com.example.easyshop.Fragments.RegisterFragment;
+import com.example.easyshop.Fragments.WishlistFragment;
 import com.example.easyshop.Model.UserModel;
 import com.example.easyshop.R;
 import com.example.easyshop.Utils.KeyboardUtils;

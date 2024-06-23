@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -32,22 +31,18 @@ import com.example.easyshop.Model.PostModel;
 import com.example.easyshop.R;
 import com.example.easyshop.activities.MainActivity;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.AutocompletePrediction;
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse;
-import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
@@ -61,15 +56,12 @@ public class CreatePostFragment extends Fragment {
     private EditText editTextTitle;
     private EditText editTextDescription;
     private EditText editTextPrice;
-    private EditText editTextAddress;
     private ImageView imageView1;
     private Button buttonCreatePost;
-    private RecyclerView addressSuggestionsRecyclerView;
-    private AddressSuggestionsAdapter addressSuggestionsAdapter;
     private Uri imageUri1;
     private FirebaseFirestore fs;
     private FirebaseAuth mAuth;
-    private PlacesClient placesClient;
+    private String selectedAddress;
 
     public CreatePostFragment() {
         // Required empty public constructor
@@ -84,33 +76,39 @@ public class CreatePostFragment extends Fragment {
         editTextTitle = view.findViewById(R.id.createPostTitle);
         editTextDescription = view.findViewById(R.id.createPostDescription);
         editTextPrice = view.findViewById(R.id.createPostPrice);
-        editTextAddress = view.findViewById(R.id.createPostAddress);
         imageView1 = view.findViewById(R.id.createPostImage1);
-
         buttonCreatePost = view.findViewById(R.id.createPostSubmitButton);
-        addressSuggestionsRecyclerView = view.findViewById(R.id.addressSuggestionsRecyclerView);
 
         // Initialize the Places API
         Places.initialize(requireContext(), "AIzaSyAE412NbG66NdE68Fap8_ncqt_crHnxYTE");
-        placesClient = Places.createClient(requireContext());
 
-        imageView1.setOnClickListener(v -> openImageSelector());
+        // Setup AutocompleteSupportFragment
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
-        addressSuggestionsAdapter = new AddressSuggestionsAdapter(new ArrayList<>(), suggestion -> {
-            editTextAddress.setText(suggestion);
-            addressSuggestionsRecyclerView.setVisibility(View.GONE); // Hide the dropdown after selection
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS));
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(@NonNull Place place) {
+                // Get the address
+                selectedAddress = place.getAddress();
+            }
+
+            @Override
+            public void onError(@NonNull Status status) {
+                // Handle error
+                Toast.makeText(getContext(), "Error: " + status.getStatusMessage(), Toast.LENGTH_SHORT).show();
+            }
         });
 
-        addressSuggestionsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        addressSuggestionsRecyclerView.setAdapter(addressSuggestionsAdapter);
+        imageView1.setOnClickListener(v -> openImageSelector());
 
         buttonCreatePost.setOnClickListener(v -> {
             String title = editTextTitle.getText().toString();
             String description = editTextDescription.getText().toString();
             double price = editTextPrice.getText().toString().isEmpty() ? 0.0 : Double.parseDouble(editTextPrice.getText().toString());
-            String address = editTextAddress.getText().toString();
 
-            if (title.isEmpty() || description.isEmpty() || price <= 0 || address.isEmpty()) {
+            if (title.isEmpty() || description.isEmpty() || price <= 0 || selectedAddress == null || selectedAddress.isEmpty()) {
                 Toast.makeText(getContext(), "Please fill all the fields and upload at least one image", Toast.LENGTH_SHORT).show();
             } else {
                 String ownerID = mAuth.getCurrentUser().getUid();
@@ -120,7 +118,7 @@ public class CreatePostFragment extends Fragment {
                 String imageUriString = (imageUri1 != null) ? imageUri1.toString() : "";
 
                 // Create a new post
-                PostModel post = new PostModel("", title, description, imageUriString, price, address, ownerID, timestamp);
+                PostModel post = new PostModel("", title, description, imageUriString, price, selectedAddress, ownerID, timestamp);
 
                 // Add post to Firestore
                 fs.collection("posts").add(post)
@@ -139,7 +137,9 @@ public class CreatePostFragment extends Fragment {
                                                     editTextTitle.setText("");
                                                     editTextDescription.setText("");
                                                     editTextPrice.setText("");
-                                                    editTextAddress.setText("");
+                                                    selectedAddress = null;
+                                                    autocompleteFragment.setText("");
+
                                                     imageView1.setImageResource(R.drawable.add_image);
 
                                                     imageUri1 = null;
@@ -156,41 +156,6 @@ public class CreatePostFragment extends Fragment {
                         })
                         .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to create post", Toast.LENGTH_SHORT).show());
             }
-        });
-
-        // Add a TextWatcher to the address field to trigger autocomplete suggestions
-        editTextAddress.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!s.toString().isEmpty()) {
-                    getAutocompleteSuggestions(s.toString());
-                } else {
-                    addressSuggestionsRecyclerView.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-
-        // Add a focus change listener to dismiss the suggestions dropdown when focus is lost
-        editTextAddress.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) {
-                addressSuggestionsRecyclerView.setVisibility(View.GONE);
-            }
-        });
-
-        // Add a touch listener to the root view to dismiss the suggestions dropdown when clicking outside
-        view.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                addressSuggestionsRecyclerView.setVisibility(View.GONE);
-            }
-            return false;
         });
 
         return view;
@@ -211,40 +176,6 @@ public class CreatePostFragment extends Fragment {
                     }
                 });
         builder.show();
-    }
-
-    private void getAutocompleteSuggestions(String query) {
-        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
-                .setQuery(query)
-                .build();
-
-        placesClient.findAutocompletePredictions(request).addOnCompleteListener(new OnCompleteListener<FindAutocompletePredictionsResponse>() {
-            @Override
-            public void onComplete(@NonNull Task<FindAutocompletePredictionsResponse> task) {
-                if (task.isSuccessful() && task.getResult() != null) {
-                    List<AutocompletePrediction> predictions = task.getResult().getAutocompletePredictions();
-                    List<String> suggestionList = new ArrayList<>();
-                    for (AutocompletePrediction prediction : predictions) {
-                        suggestionList.add(prediction.getFullText(null).toString());
-                    }
-                    if (!suggestionList.isEmpty()) {
-                        addressSuggestionsRecyclerView.setVisibility(View.VISIBLE);
-                        addressSuggestionsAdapter.updateSuggestions(suggestionList);
-                    } else {
-                        addressSuggestionsRecyclerView.setVisibility(View.GONE);
-                    }
-                } else {
-                    // Handle the error
-                    Status status = task.getException() instanceof com.google.android.gms.common.api.ApiException ?
-                            ((com.google.android.gms.common.api.ApiException) task.getException()).getStatus() : null;
-                    if (status != null) {
-                        Toast.makeText(getContext(), "Error: " + status.getStatusMessage(), Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getContext(), "Unknown error occurred", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
     }
 
     private Uri getImageUri(Context context, Bitmap bitmap) {
@@ -277,7 +208,7 @@ public class CreatePostFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == CAMERA_REQUEST_CODE) {
+        if (requestCode == CAMERA_REQUEST_CODE && grantResults.length > 0 && grantResults[0] == PERMISSION_GRANTED) {
             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
         }

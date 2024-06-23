@@ -1,6 +1,9 @@
 package com.example.easyshop.Fragments;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +23,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.auth.FirebaseAuth;
 
-
 public class PaymentFragment extends Fragment {
 
     private PostModel post;
@@ -38,26 +40,86 @@ public class PaymentFragment extends Fragment {
         EditText expiryDate = view.findViewById(R.id.expirationDateEditText);
         EditText cvv = view.findViewById(R.id.cvvEditText);
         Button buyButton = view.findViewById(R.id.buyButton);
+
+        cardNumber.addTextChangedListener(new TextWatcher() {
+            private boolean isFormatting;
+            private int hyphenCountBefore;
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                hyphenCountBefore = countHyphens(s);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Prevent infinite loop
+                if (isFormatting) {
+                    isFormatting = false;
+                    return;
+                }
+
+                isFormatting = true;
+
+                StringBuilder formatted = new StringBuilder(s.toString().replace("-", ""));
+                int hyphenCountAfter = countHyphens(formatted);
+
+                // Add hyphens
+                for (int i = 4; i < formatted.length(); i += 5) {
+                    formatted.insert(i, "-");
+                }
+
+                // Set formatted text
+                cardNumber.setText(formatted.toString());
+                cardNumber.setSelection(formatted.length());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+
+            private int countHyphens(CharSequence s) {
+                int count = 0;
+                for (int i = 0; i < s.length(); i++) {
+                    if (s.charAt(i) == '-') {
+                        count++;
+                    }
+                }
+                return count;
+            }
+        });
+
+        expiryDate.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() == 2 && !s.toString().contains("/")) {
+                    s.append("/");
+                }
+            }
+        });
+
+        cvv.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
+
         buyButton.setOnClickListener(v -> handlePayment());
         return view;
-
     }
 
     public void handlePayment() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        // Update the post as purchased
         post.setPurchased(true);
         post.setBuyerID(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         db.collection("posts").document(post.getPostID())
                 .set(post)
                 .addOnSuccessListener(aVoid -> {
-                    // Add the post to "my orders" section in the user's database
                     String userID = post.getBuyerID();
                     db.collection("users").document(userID).update("myOrders", FieldValue.arrayUnion(post))
                             .addOnSuccessListener(aVoid1 -> {
                                 Toast.makeText(getContext(), "Purchase successful", Toast.LENGTH_SHORT).show();
-                                // Navigate back to the home fragment
                                 FragmentActivity activity = (FragmentActivity) getContext();
                                 FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
                                 transaction.replace(R.id.fragment_container, new HomeFragment());
@@ -66,6 +128,5 @@ public class PaymentFragment extends Fragment {
                             .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to add to orders", Toast.LENGTH_SHORT).show());
                 })
                 .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to update post", Toast.LENGTH_SHORT).show());
-
     }
 }

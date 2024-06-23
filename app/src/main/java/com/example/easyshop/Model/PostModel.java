@@ -1,6 +1,9 @@
 package com.example.easyshop.Model;
 
 import com.google.firebase.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class PostModel {
     private String postID;
@@ -13,9 +16,12 @@ public class PostModel {
     private Timestamp timestamp;
     private boolean isPurchased;
     private String buyerID;
+    private List<CommentModel> comments;
+    private boolean isInWishlist;
 
     // No-argument constructor
     public PostModel() {
+        comments = new ArrayList<>();
     }
 
     public PostModel(String postID, String title, String description, String image, double price, String location, String ownerID, Timestamp timestamp) {
@@ -27,6 +33,8 @@ public class PostModel {
         this.location = location;
         this.ownerID = ownerID;
         this.timestamp = timestamp;
+        this.comments = new ArrayList<>();
+        this.isInWishlist = false;
     }
 
     // Getter and Setter methods
@@ -108,5 +116,21 @@ public class PostModel {
 
     public void setBuyerID(String buyerID) {
         this.buyerID = buyerID;
+    }
+
+    public List<CommentModel> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<CommentModel> comments) {
+        this.comments = comments;
+    }
+
+    public boolean isInWishlist() {
+        return isInWishlist;
+    }
+
+    public void setInWishlist(boolean inWishlist) {
+        isInWishlist = inWishlist;
     }
 }

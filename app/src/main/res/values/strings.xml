@@ -25,6 +25,7 @@
     <string name="expiration_date">Expiration date</string>
     <string name="cvv">CVV</string>
     <string name="confirm_and_pay">Confirm and pay</string>
+    <string name="credit_card_icon">Credit Card Icon</string>
 
 <!--    Create Post Page-->
     <string name="sell_post">Create Post</string>

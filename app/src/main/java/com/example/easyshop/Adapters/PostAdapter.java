@@ -18,10 +18,12 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.easyshop.Fragments.PaymentFragment;
 import com.example.easyshop.Fragments.HomeFragment;
+import com.example.easyshop.Fragments.PostDetailsFragment;
 import com.example.easyshop.Model.PostModel;
 import com.example.easyshop.Model.UserModel;
 import com.example.easyshop.R;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -37,14 +39,14 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<PostModel> postList;
     private FirebaseFirestore db;
     private boolean isMyPostsPage;
-    private String currentUserID; // Added to store current user's ID
+    private String currentUserID;
 
     public PostAdapter(Context context, List<PostModel> postList, boolean isMyPostsPage, String currentUserID) {
         this.context = context;
         this.postList = postList;
         this.db = FirebaseFirestore.getInstance();
         this.isMyPostsPage = isMyPostsPage;
-        this.currentUserID = currentUserID; // Initialize with current user's ID
+        this.currentUserID = currentUserID;
     }
 
     @Override
@@ -108,9 +110,9 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 });
 
         // Hide "Buy" button if the post belongs to the current user
-        if (post.getOwnerID().equals(currentUserID)||post.isPurchased()){
+        if (post.getOwnerID().equals(currentUserID) || post.isPurchased()) {
             holder.buyButton.setVisibility(View.GONE);
-            if(post.isPurchased()) {
+            if (post.isPurchased()) {
                 holder.buyButton.setText("Purchased");
                 holder.buyButton.setClickable(false);
             }
@@ -126,6 +128,47 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             transaction.replace(R.id.fragment_container, new PaymentFragment(post));
             transaction.addToBackStack(null); // Optional: Adds the transaction to the back stack so the user can navigate back
             transaction.commit();
+        });
+
+        // Set click listener for the comment icon
+        holder.commentIcon.setOnClickListener(v -> {
+            FragmentActivity activity = (FragmentActivity) context;
+            FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, new PostDetailsFragment(post));
+            transaction.addToBackStack(null); // Adds the transaction to the back stack so the user can navigate back
+            transaction.commit();
+        });
+
+        // Set comment count visibility
+        if (post.getComments().size() > 0) {
+            holder.commentCount.setText(String.valueOf(post.getComments().size()));
+            holder.commentCount.setVisibility(View.VISIBLE);
+        } else {
+            holder.commentCount.setVisibility(View.GONE);
+        }
+
+        // Set click listener for the wishlist icon
+        holder.wishlistIcon.setOnClickListener(v -> {
+            boolean isInWishlist = post.isInWishlist();
+            post.setInWishlist(!isInWishlist);
+
+            // Update the icon
+            holder.wishlistIcon.setImageResource(post.isInWishlist() ? R.drawable.ic_in_wishlist : R.drawable.ic_no_wishlist);
+
+            // Update the wishlist in Firestore
+            db.collection("users").document(currentUserID).get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    UserModel user = documentSnapshot.toObject(UserModel.class);
+                    if (user != null) {
+                        if (post.isInWishlist()) {
+                            user.getWishList().add(post);
+                        } else {
+                            user.getWishList().removeIf(wishlistPost -> wishlistPost.getPostID().equals(post.getPostID()));
+                        }
+                        db.collection("users").document(currentUserID).set(user, SetOptions.merge());
+                    }
+                }
+            });
         });
     }
 
@@ -283,8 +326,9 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public static class HomeViewHolder extends RecyclerView.ViewHolder {
         ImageView profileImage, itemImageView;
-        TextView userNameTextView, postTimestampTextView, itemTitleTextView, itemDescriptionTextView, itemPriceTextView, itemLocationTextView;
+        TextView userNameTextView, postTimestampTextView, itemTitleTextView, itemDescriptionTextView, itemPriceTextView, itemLocationTextView, commentCount;
         Button buyButton;
+        ImageView commentIcon, wishlistIcon;
 
         public HomeViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -296,6 +340,9 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             itemDescriptionTextView = itemView.findViewById(R.id.itemDescriptionTextView);
             itemPriceTextView = itemView.findViewById(R.id.itemPriceTextView);
             itemLocationTextView = itemView.findViewById(R.id.itemLocationTextView);
+            commentIcon = itemView.findViewById(R.id.commentIcon);
+            commentCount = itemView.findViewById(R.id.commentCount);
+            wishlistIcon = itemView.findViewById(R.id.wishlistIcon);
             buyButton = itemView.findViewById(R.id.buyButton);
         }
     }

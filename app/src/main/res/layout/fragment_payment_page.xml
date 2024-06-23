@@ -3,36 +3,54 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@android:color/white">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/payment_page"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingBottom="16dp" />
 
-<!--    <Button-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="@string/credit_card"-->
-<!--        android:textColor="@android:color/white"-->
-<!--        android:layout_marginTop="16dp" />-->
-
-    <EditText
-        android:id="@+id/cardNumberEditText"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/card_number"
-        android:inputType="number"
-        android:layout_marginTop="16dp" />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/edit_text_background2"
+        android:padding="8dp"
+        android:layout_marginTop="16dp">
+
+        <EditText
+            android:id="@+id/cardNumberEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/card_number"
+            android:inputType="number"
+            android:maxLength="19"
+            android:background="@null"
+            android:padding="8dp" />
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/ic_credit_card"
+            android:contentDescription="@string/credit_card_icon"
+            android:paddingStart="8dp" />
+    </LinearLayout>
 
     <EditText
         android:id="@+id/cardHolderEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/card_holder"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:background="@drawable/edit_text_background2"
+        android:padding="8dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,7 +63,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="@string/expiration_date" />
+            android:hint="@string/expiration_date"
+            android:background="@drawable/edit_text_background2"
+            android:padding="8dp"
+            android:maxLength="5" />
 
         <EditText
             android:id="@+id/cvvEditText"
@@ -53,14 +74,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="@string/cvv"
+            android:background="@drawable/edit_text_background2"
+            android:padding="8dp"
+            android:maxLength="3"
             android:layout_marginStart="16dp" />
-
     </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp" />
 
     <Button
         android:id="@+id/buyButton"
@@ -69,6 +87,7 @@
         android:text="@string/confirm_and_pay"
         android:background="@color/colorAccent"
         android:textColor="@android:color/white"
-        android:layout_marginTop="16dp" />
-
+        android:layout_marginTop="24dp"
+        android:padding="12dp"
+        android:textSize="16sp" />
 </LinearLayout>

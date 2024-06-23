@@ -90,27 +90,12 @@
                 android:textColor="@color/black" />
         </LinearLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
+        <fragment
+            android:id="@+id/autocomplete_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/address"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_marginBottom="8dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/createPostAddress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:maxLines="1" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/addressSuggestionsRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_marginBottom="8dp" />
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            android:layout_marginBottom="8dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"

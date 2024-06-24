@@ -35,7 +35,6 @@ import java.io.IOException;
 public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
     private static final int PICK_IMAGE_REQUEST = 71;
-    private static final int CAMERA_REQUEST_CODE = 101;
 
     private ImageView profileImage;
     private ImageButton editIcon;
@@ -87,7 +86,7 @@ public class ProfileFragment extends Fragment {
         // Initially set profile image to default avatar
         profileImage.setImageResource(R.drawable.avatar1);
 
-        editIcon.setOnClickListener(v -> showImageSelectionDialog());
+        editIcon.setOnClickListener(v -> openGallery());
 
         view.findViewById(R.id.update_button).setOnClickListener(v -> {
             String newName = nameEditText.getText().toString();
@@ -101,21 +100,11 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-    private void showImageSelectionDialog() {
-        String[] options = {"Take Photo", "Choose from Gallery"};
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(getContext());
-        builder.setTitle("Select Image")
-                .setItems(options, (dialog, which) -> {
-                    if (which == 0) {
-                        ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
-                    } else if (which == 1) {
-                        Intent intent = new Intent();
-                        intent.setType("image/*");
-                        intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-                    }
-                });
-        builder.show();
+    private void openGallery() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
 
     private void updateUserProfile(String name) {
@@ -177,15 +166,6 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == CAMERA_REQUEST_CODE) {
-            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
-        }
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -200,11 +180,6 @@ public class ProfileFragment extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            } else if (requestCode == CAMERA_REQUEST_CODE && data != null) {
-                Bitmap photo = (Bitmap) data.getExtras().get("data");
-                profileImage.setImageBitmap(photo);
-                profilePicUrl = encodeImageToBase64(photo);
-                uploadProfileImageToFirestore(profilePicUrl);
             }
         }
     }

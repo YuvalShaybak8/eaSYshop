@@ -1,5 +1,7 @@
 package com.example.easyshop.Fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyPostsFragment extends Fragment {
+    private static final int PICK_IMAGE_REQUEST = 71;
     private FirebaseFirestore fs;
     private RecyclerView recyclerView;
     private PostAdapter postAdapter;
@@ -71,5 +74,14 @@ public class MyPostsFragment extends Fragment {
                     }
                     swipeRefreshLayout.setRefreshing(false);
                 });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == getActivity().RESULT_OK && data != null && data.getData() != null) {
+            Uri selectedImageUri = data.getData();
+            postAdapter.updateSelectedImageUri(selectedImageUri);
+        }
     }
 }

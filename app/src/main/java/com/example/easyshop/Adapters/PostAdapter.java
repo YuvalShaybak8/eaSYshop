@@ -1,6 +1,8 @@
 package com.example.easyshop.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,12 +38,15 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int VIEW_TYPE_MY_POSTS = 1;
     private static final int VIEW_TYPE_ORDERS = 2; // New view type for orders
 
+    private static final int PICK_IMAGE_REQUEST = 71;
+
     private Context context;
     private List<PostModel> postList;
     private FirebaseFirestore db;
     private boolean isMyPostsPage;
     private boolean isOrdersPage; // New boolean for orders page
     private String currentUserID;
+    private Uri selectedImageUri;
 
     public PostAdapter(Context context, List<PostModel> postList, boolean isMyPostsPage, boolean isOrdersPage, String currentUserID) {
         this.context = context;
@@ -87,7 +92,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             bindHomeViewHolder(homeViewHolder, post);
         } else if (holder.getItemViewType() == VIEW_TYPE_MY_POSTS) {
             MyPostsViewHolder myPostsViewHolder = (MyPostsViewHolder) holder;
-            bindMyPostsViewHolder(myPostsViewHolder, post);
+            bindMyPostsViewHolder(myPostsViewHolder, post, position);
         } else {
             OrdersViewHolder ordersViewHolder = (OrdersViewHolder) holder;
             bindOrdersViewHolder(ordersViewHolder, post);
@@ -198,7 +203,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         });
     }
 
-    private void bindMyPostsViewHolder(MyPostsViewHolder holder, PostModel post) {
+    private void bindMyPostsViewHolder(MyPostsViewHolder holder, PostModel post, int position) {
         holder.itemTitleTextView.setText(post.getTitle());
         holder.itemDescriptionTextView.setText(post.getDescription());
         holder.itemPriceTextView.setText("Price: $" + post.getPrice());
@@ -238,12 +243,23 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.editableDescriptionTextView.setVisibility(View.VISIBLE);
         });
 
+        holder.editImageButton.setOnClickListener(v -> {
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            ((FragmentActivity) context).startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+        });
+
         holder.saveButton.setOnClickListener(v -> {
             String newTitle = holder.editableTitleTextView.getText().toString();
             String newDescription = holder.editableDescriptionTextView.getText().toString();
+            Uri selectedImageUri = holder.selectedImageUri;
 
             post.setTitle(newTitle);
             post.setDescription(newDescription);
+            if (selectedImageUri != null) {
+                post.setImage(selectedImageUri.toString());
+            }
 
             db.collection("posts").document(post.getPostID())
                     .set(post)
@@ -258,6 +274,9 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                                 if (userPost.getPostID().equals(post.getPostID())) {
                                                     userPost.setTitle(newTitle);
                                                     userPost.setDescription(newDescription);
+                                                    if (selectedImageUri != null) {
+                                                        userPost.setImage(selectedImageUri.toString());
+                                                    }
                                                     break;
                                                 }
                                             }
@@ -366,6 +385,11 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return postList.size();
     }
 
+    public void updateSelectedImageUri(Uri selectedImageUri) {
+        this.selectedImageUri = selectedImageUri;
+        notifyDataSetChanged(); // Notify the adapter to refresh the views
+    }
+
     public static class HomeViewHolder extends RecyclerView.ViewHolder {
         ImageView profileImage, itemImageView;
         TextView userNameTextView, postTimestampTextView, itemTitleTextView, itemDescriptionTextView, itemPriceTextView, itemLocationTextView, commentCount;
@@ -395,6 +419,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         EditText editableTitleTextView, editableDescriptionTextView;
         Button editButton, deleteButton, saveButton;
         ImageButton editImageButton;
+        Uri selectedImageUri; // Add this line
 
         public MyPostsViewHolder(@NonNull View itemView) {
             super(itemView);

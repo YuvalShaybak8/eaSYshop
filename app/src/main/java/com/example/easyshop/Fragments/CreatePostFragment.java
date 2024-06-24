@@ -51,7 +51,6 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 public class CreatePostFragment extends Fragment {
 
     private static final int PICK_IMAGE_REQUEST = 71;
-    private static final int CAMERA_REQUEST_CODE = 101;
 
     private EditText editTextTitle;
     private EditText editTextDescription;
@@ -162,20 +161,10 @@ public class CreatePostFragment extends Fragment {
     }
 
     private void openImageSelector() {
-        String[] options = {"Take Photo", "Choose from Gallery"};
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(getContext());
-        builder.setTitle("Select Image")
-                .setItems(options, (dialog, which) -> {
-                    if (which == 0) {
-                        ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
-                    } else if (which == 1) {
-                        Intent intent = new Intent();
-                        intent.setType("image/*");
-                        intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-                    }
-                });
-        builder.show();
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
 
     private Uri getImageUri(Context context, Bitmap bitmap) {
@@ -195,22 +184,7 @@ public class CreatePostFragment extends Fragment {
                     imageUri1 = selectedImageUri;
                     imageView1.setImageURI(imageUri1);
                     break;
-                case CAMERA_REQUEST_CODE:
-                    Bitmap photo = (Bitmap) data.getExtras().get("data");
-                    imageView1.setImageBitmap(photo);
-                    // Convert bitmap to Uri
-                    imageUri1 = getImageUri(getContext(), photo);
-                    break;
             }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == CAMERA_REQUEST_CODE && grantResults.length > 0 && grantResults[0] == PERMISSION_GRANTED) {
-            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
         }
     }
 }

@@ -21,6 +21,7 @@ import com.example.easyshop.R;
 import com.example.easyshop.Utils.KeyboardUtils;
 import com.example.easyshop.activities.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginFragment extends Fragment {
 
@@ -30,6 +31,7 @@ public class LoginFragment extends Fragment {
     private Button signUpButton;
     private ImageButton passwordToggle;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
     private boolean isPasswordVisible = false;
     private ScrollView scrollView;
 
@@ -39,6 +41,7 @@ public class LoginFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         emailEditText = view.findViewById(R.id.emailEditText);
         passwordEditText = view.findViewById(R.id.passwordEditText);
@@ -93,12 +96,30 @@ public class LoginFragment extends Fragment {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(getContext(), "Login successful!", Toast.LENGTH_SHORT).show();
-                        navigateToHomeFragment();
+                        updateLoginStatus(true);
                     } else {
                         Toast.makeText(getContext(), "Login failed!", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void updateLoginStatus(boolean isLoggedIn) {
+        if (mAuth.getCurrentUser() != null) {
+            String loggedInUserID = mAuth.getCurrentUser().getUid();
+            db.collection("users").document(loggedInUserID)
+                    .update("isLoggedIn", isLoggedIn)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            if (isLoggedIn) {
+                                navigateToHomeFragment();
+                            } else {
+                                Toast.makeText(getContext(), "Login status updated", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "Failed to update login status", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
     }
 
     private void navigateToHomeFragment() {

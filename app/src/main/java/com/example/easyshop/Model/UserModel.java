@@ -12,6 +12,7 @@ public class UserModel {
     public ArrayList<PostModel> wishList;
     public ArrayList<PostModel> myOrders;
     public List<CommentModel> comments;
+    public boolean isLoggedIn;
 
     private static final String DEFAULT_IMAGE = "drawable/avatar1.png";
 
@@ -24,6 +25,7 @@ public class UserModel {
         this.wishList = new ArrayList<>();
         this.myOrders = new ArrayList<>();
         this.comments = new ArrayList<>();
+        this.isLoggedIn = false;
     }
 
     public UserModel(String name, String email, String password) {
@@ -35,6 +37,16 @@ public class UserModel {
         this.wishList = new ArrayList<>();
         this.myOrders = new ArrayList<>();
         this.comments = new ArrayList<>();
+        this.isLoggedIn = false;
+    }
+
+    // Getters and setters for isLoggedIn
+    public boolean isLoggedIn() {
+        return isLoggedIn;
+    }
+
+    public void setLoggedIn(boolean loggedIn) {
+        isLoggedIn = loggedIn;
     }
 
     public String getName() {

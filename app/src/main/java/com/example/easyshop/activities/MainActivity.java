@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         header = findViewById(R.id.header);
 
         if (savedInstanceState == null) {
-            replaceFragment(new LoginFragment(), false);
+            checkLoginStatus();
         }
 
         // Set profile picture
@@ -101,6 +101,31 @@ public class MainActivity extends AppCompatActivity {
                 bottomNavigationView.setVisibility(isVisible ? View.GONE : View.VISIBLE);
             }
         });
+    }
+
+    private void checkLoginStatus() {
+        if (mAuth.getCurrentUser() != null) {
+            String loggedInUserID = mAuth.getCurrentUser().getUid();
+            db.collection("users").document(loggedInUserID)
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            UserModel user = documentSnapshot.toObject(UserModel.class);
+                            if (user != null && user.isLoggedIn()) {
+                                replaceFragment(new HomeFragment(), false);
+                            } else {
+                                replaceFragment(new LoginFragment(), false);
+                            }
+                        } else {
+                            replaceFragment(new LoginFragment(), false);
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        replaceFragment(new LoginFragment(), false);
+                    });
+        } else {
+            replaceFragment(new LoginFragment(), false);
+        }
     }
 
     private void loadUserProfile() {

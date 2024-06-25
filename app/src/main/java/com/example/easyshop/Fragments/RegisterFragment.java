@@ -104,6 +104,7 @@ public class RegisterFragment extends Fragment {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         UserModel user = new UserModel(name, email, hashedPassword);
+                        user.setLoggedIn(true); // Set isLoggedIn to true
                         db.collection("users").document(mAuth.getCurrentUser().getUid())
                                 .set(user)
                                 .addOnSuccessListener(aVoid -> {

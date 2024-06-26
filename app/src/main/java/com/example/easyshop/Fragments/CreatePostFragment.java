@@ -187,6 +187,7 @@ public class CreatePostFragment extends Fragment {
                                                                 progressDialog.dismiss();
                                                                 Toast.makeText(getContext(), "Post created successfully", Toast.LENGTH_SHORT).show();
                                                                 resetFields();
+                                                                navigateToHome();
                                                             })
                                                             .addOnFailureListener(e -> {
                                                                 progressDialog.dismiss();
@@ -217,5 +218,12 @@ public class CreatePostFragment extends Fragment {
         editTextPrice.setText("");
         imageView1.setImageResource(R.drawable.add_image);
         imageUri1 = null;
+    }
+
+    private void navigateToHome() {
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        intent.putExtra("navigateTo", R.id.action_home); // pass the home action to navigate
+        startActivity(intent);
+        getActivity().finish();
     }
 }

@@ -10,9 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,10 +32,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class ProfileFragment extends Fragment {
@@ -44,9 +41,9 @@ public class ProfileFragment extends Fragment {
     private Uri mImageUri;
     private ImageView profileImageView;
     private ImageButton chooseImageButton;
-    private Button uploadImageButton;
-    private TextView nameTextView;
-    private TextView emailTextView;
+    private Button updateButton;
+    private EditText nameEditText;
+    private EditText emailEditText;
     private String userId;
     private StorageReference storageReference;
     private ProgressDialog progressDialog;
@@ -54,58 +51,29 @@ public class ProfileFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile_edit, container, false);
 
         profileImageView = view.findViewById(R.id.profile_image);
         chooseImageButton = view.findViewById(R.id.edit_icon);
-        uploadImageButton = view.findViewById(R.id.update_button);
-        nameTextView = view.findViewById(R.id.name);
-        emailTextView = view.findViewById(R.id.email);
+        updateButton = view.findViewById(R.id.update_button);
+        nameEditText = view.findViewById(R.id.name);
+        emailEditText = view.findViewById(R.id.email);
 
-        // Get current user ID
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            userId = currentUser.getUid();
-            loadUserProfile();
-        } else {
-            // Handle the case where there is no logged-in user
-            Toast.makeText(getContext(), "User not logged in", Toast.LENGTH_SHORT).show();
-            return view;
+        storageReference = FirebaseStorage.getInstance().getReference("uploads");
+        progressDialog = new ProgressDialog(getContext());
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            userId = user.getUid();
+            emailEditText.setText(user.getEmail());
         }
 
-        chooseImageButton.setOnClickListener(v -> openFileChooser());
+        loadUserProfile();
 
-        uploadImageButton.setOnClickListener(v -> uploadImage());
+        chooseImageButton.setOnClickListener(v -> openFileChooser());
+        updateButton.setOnClickListener(v -> updateProfile());
 
         return view;
-    }
-
-    private void loadUserProfile() {
-        FirebaseFirestore.getInstance().collection("users").document(userId)
-                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            String name = documentSnapshot.getString("name");
-                            String profilePicUrl = documentSnapshot.getString("profilePicUrl");
-                            String email = documentSnapshot.getString("email");
-
-                            nameTextView.setText(name);
-                            emailTextView.setText(email);
-                            if (profilePicUrl != null && !profilePicUrl.isEmpty()) {
-                                Glide.with(getContext()).load(profilePicUrl).into(profileImageView);
-                                // Update the header image
-                                ((MainActivity) getActivity()).updateHeaderProfilePicture(profilePicUrl);
-                            }
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), "Failed to load profile", Toast.LENGTH_SHORT).show();
-                    }
-                });
     }
 
     private void openFileChooser() {
@@ -120,80 +88,101 @@ public class ProfileFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == getActivity().RESULT_OK && data != null && data.getData() != null) {
             mImageUri = data.getData();
-            profileImageView.setImageURI(mImageUri);
+            Glide.with(this).load(mImageUri).into(profileImageView);
         }
     }
 
-    private void uploadImage() {
+    private void updateProfile() {
+        String name = nameEditText.getText().toString();
+        if (name.isEmpty()) {
+            Toast.makeText(getContext(), "Username cannot be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        progressDialog.setMessage("Updating profile...");
+        progressDialog.show();
+
         if (mImageUri != null) {
-            progressDialog = new ProgressDialog(getContext());
-            progressDialog.setTitle("Uploading File...");
-            progressDialog.show();
+            String fileExtension = getFileExtension(mImageUri);
+            String fileName = System.currentTimeMillis() + "." + fileExtension;
+            StorageReference fileReference = storageReference.child(fileName);
 
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.CANADA);
-            Date now = new Date();
-            String fileName = formatter.format(now);
-            storageReference = FirebaseStorage.getInstance().getReference("profile_pics/" + fileName);
-
-            storageReference.putFile(mImageUri)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    String downloadUrl = uri.toString();
-                                    Map<String, Object> updates = new HashMap<>();
-                                    updates.put("profilePicUrl", downloadUrl);
-
-                                    FirebaseFirestore.getInstance().collection("users").document(userId)
-                                            .update(updates)
-                                            .addOnSuccessListener(aVoid -> {
-                                                Toast.makeText(getContext(), "Profile updated", Toast.LENGTH_SHORT).show();
-                                                if (progressDialog.isShowing())
-                                                    progressDialog.dismiss();
-                                                // Load the updated profile picture
-                                                loadUserProfilePicture();
-                                            })
-                                            .addOnFailureListener(e -> {
-                                                Toast.makeText(getContext(), "Failed to update profile picture URL: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                if (progressDialog.isShowing())
-                                                    progressDialog.dismiss();
-                                            });
-                                }
-                            });
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            if (progressDialog.isShowing())
-                                progressDialog.dismiss();
-                            Toast.makeText(getContext(), "Failed to upload: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
+            fileReference.putFile(mImageUri)
+                    .addOnSuccessListener(taskSnapshot -> fileReference.getDownloadUrl().addOnSuccessListener(uri -> {
+                        String imageUrl = uri.toString();
+                        updateUserProfile(name, imageUrl);
+                    }))
+                    .addOnFailureListener(e -> {
+                        if (progressDialog.isShowing())
+                            progressDialog.dismiss();
+                        Toast.makeText(getContext(), "Failed to upload image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
         } else {
-            Toast.makeText(getContext(), "No file selected", Toast.LENGTH_SHORT).show();
+            updateUserProfile(name, null);
         }
     }
 
-    private void loadUserProfilePicture() {
+    private void updateUserProfile(String name, String imageUrl) {
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("name", name);
+        if (imageUrl != null) {
+            updates.put("profilePicUrl", imageUrl);
+        }
+
+        FirebaseFirestore.getInstance().collection("users").document(userId)
+                .update(updates)
+                .addOnSuccessListener(aVoid -> {
+                    if (progressDialog.isShowing())
+                        progressDialog.dismiss();
+                    Toast.makeText(getContext(), "Profile updated", Toast.LENGTH_SHORT).show();
+                    loadUserProfile();
+                    if (imageUrl != null) {
+                        updateHeaderProfilePicture(imageUrl);
+                    }
+                    // Navigate to HomeFragment
+                    navigateToHome();
+                })
+                .addOnFailureListener(e -> {
+                    if (progressDialog.isShowing())
+                        progressDialog.dismiss();
+                    Toast.makeText(getContext(), "Failed to update profile: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void loadUserProfile() {
         FirebaseFirestore.getInstance().collection("users").document(userId)
                 .get().addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
+                        String name = documentSnapshot.getString("name");
                         String profilePicUrl = documentSnapshot.getString("profilePicUrl");
+                        if (name != null && !name.isEmpty()) {
+                            nameEditText.setText(name);
+                        }
                         if (profilePicUrl != null && !profilePicUrl.isEmpty()) {
-                            // Update the header image
-                            ((MainActivity) getActivity()).updateHeaderProfilePicture(profilePicUrl);
+                            Glide.with(this).load(profilePicUrl).into(profileImageView);
                         }
                     }
                 }).addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "Failed to load profile picture", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Failed to load profile", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    private void updateHeaderProfilePicture(String imageUrl) {
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).updateHeaderProfilePicture(imageUrl);
+        }
     }
 
     private String getFileExtension(Uri uri) {
         ContentResolver cR = getContext().getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
+    }
+
+    private void navigateToHome() {
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        intent.putExtra("navigateTo", R.id.action_home); // pass the home action to navigate
+        startActivity(intent);
+        getActivity().finish();
     }
 }

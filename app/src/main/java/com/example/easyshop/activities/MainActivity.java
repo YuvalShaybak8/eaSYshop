@@ -1,6 +1,7 @@
 package com.example.easyshop.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -15,13 +16,20 @@ import com.example.easyshop.Fragments.LoginFragment;
 import com.example.easyshop.Fragments.MenuBottomSheetFragment;
 import com.example.easyshop.Fragments.ProfileFragment;
 import com.example.easyshop.Fragments.RegisterFragment;
-import com.example.easyshop.Fragments.WishlistFragment;
+import com.example.easyshop.Model.CommentModel;
+import com.example.easyshop.Model.PostModel;
 import com.example.easyshop.Model.UserModel;
 import com.example.easyshop.R;
+import com.example.easyshop.Services.DatabaseHelper;
+import com.example.easyshop.Services.PostDao;
 import com.example.easyshop.Utils.KeyboardUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -35,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private String loggedInUserID;
+
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +109,9 @@ public class MainActivity extends AppCompatActivity {
                 bottomNavigationView.setVisibility(isVisible ? View.GONE : View.VISIBLE);
             }
         });
+
+        // Test SQLite operations
+        testSQLiteOperations();
     }
 
     private void checkLoginStatus() {
@@ -193,5 +206,54 @@ public class MainActivity extends AppCompatActivity {
     public void onBottomSheetDismissed() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setVisibility(View.VISIBLE);
+    }
+
+    private void testSQLiteOperations() {
+        DatabaseHelper dbHelper = new DatabaseHelper(this);
+        PostDao postDao = new PostDao(this);
+
+        // Create test data
+        List<CommentModel> comments = new ArrayList<>();
+        comments.add(new CommentModel("user1", "This is a comment", "post1"));
+
+        PostModel post = new PostModel(
+                "post1",
+                "Test Post",
+                "This is a test description",
+                "image_url",
+                100.0,
+                "Test Location",
+                "owner1",
+                new Timestamp(System.currentTimeMillis() / 1000, 0),
+                false,
+                null,
+                new ArrayList<>()
+        );
+
+        post.setComments(comments);
+
+        // Insert the test data
+        postDao.insertPost(post);
+
+        // Query the data
+        List<PostModel> posts = postDao.getAllPosts();
+
+        // Log the results
+        for (PostModel p : posts) {
+            Log.d(TAG, "Post ID: " + p.getPostID());
+            Log.d(TAG, "Title: " + p.getTitle());
+            Log.d(TAG, "Description: " + p.getDescription());
+            Log.d(TAG, "Image: " + p.getImage());
+            Log.d(TAG, "Price: " + p.getPrice());
+            Log.d(TAG, "Location: " + p.getLocation());
+            Log.d(TAG, "Owner ID: " + p.getOwnerID());
+            Log.d(TAG, "Timestamp: " + p.getTimestamp().toDate().toString());
+            Log.d(TAG, "Purchased: " + p.isPurchased());
+            Log.d(TAG, "Buyer ID: " + p.getBuyerID());
+            for (CommentModel c : p.getComments()) {
+                Log.d(TAG, "Comment User ID: " + c.getUserID());
+                Log.d(TAG, "Comment Text: " + c.getCommentText());
+            }
+        }
     }
 }

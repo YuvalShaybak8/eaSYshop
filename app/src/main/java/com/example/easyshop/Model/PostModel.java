@@ -22,7 +22,7 @@ public class PostModel {
         comments = new ArrayList<>();
     }
 
-    public PostModel(String postID, String title, String description, String image, double price, String location, String ownerID, Timestamp timestamp) {
+    public PostModel(String postID, String title, String description, String image, double price, String location, String ownerID, Timestamp timestamp, boolean isPurchased, String buyerID, List<CommentModel> comments) {
         this.postID = postID;
         this.title = title;
         this.description = description;
@@ -31,7 +31,9 @@ public class PostModel {
         this.location = location;
         this.ownerID = ownerID;
         this.timestamp = timestamp;
-        this.comments = new ArrayList<>();
+        this.isPurchased = isPurchased;
+        this.buyerID = buyerID;
+        this.comments = comments;
     }
 
     // Getter and Setter methods

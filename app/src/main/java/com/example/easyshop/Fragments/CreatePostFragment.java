@@ -165,7 +165,8 @@ public class CreatePostFragment extends Fragment {
         String ownerID = mAuth.getCurrentUser().getUid();
         Timestamp timestamp = Timestamp.now();
 
-        PostModel post = new PostModel("", title, description, imageUrl, price, location, ownerID, timestamp);
+        PostModel post = new PostModel("", title, description, imageUrl, price, location, ownerID, timestamp, false, "", new ArrayList<>());
+
 
         fs.collection("posts").add(post)
                 .addOnSuccessListener(documentReference -> {

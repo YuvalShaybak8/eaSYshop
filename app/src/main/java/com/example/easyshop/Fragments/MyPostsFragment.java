@@ -25,6 +25,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -38,7 +39,7 @@ public class MyPostsFragment extends Fragment {
 
     private static final int PICK_IMAGE_REQUEST = 71;
 
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerViewMyPosts;
     private PostAdapter postAdapter;
     private List<PostModel> postList;
     private FirebaseFirestore db;
@@ -46,18 +47,19 @@ public class MyPostsFragment extends Fragment {
     private String currentUserID;
     private Uri selectedImageUri;
     private ProgressDialog progressDialog;
+    private PostModel postToEdit;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_posts, container, false);
 
-        recyclerView = view.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewMyPosts = view.findViewById(R.id.recyclerViewMyPosts);
+        recyclerViewMyPosts.setLayoutManager(new LinearLayoutManager(getContext()));
 
         postList = new ArrayList<>();
         postAdapter = new PostAdapter(getContext(), postList, true, false, currentUserID);
-        recyclerView.setAdapter(postAdapter);
+        recyclerViewMyPosts.setAdapter(postAdapter);
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -74,14 +76,22 @@ public class MyPostsFragment extends Fragment {
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         UserModel user = documentSnapshot.toObject(UserModel.class);
-                        if (user != null && user.myPosts != null) {
+                        if (user != null && user.getMyPosts() != null) {
                             postList.clear();
-                            postList.addAll(user.myPosts);
+                            postList.addAll(user.getMyPosts());
                             postAdapter.notifyDataSetChanged();
                         }
                     }
                 })
                 .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to load posts", Toast.LENGTH_SHORT).show());
+    }
+
+    public void openFileChooser(PostModel post) {
+        postToEdit = post;
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
     @Override
@@ -90,13 +100,13 @@ public class MyPostsFragment extends Fragment {
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             selectedImageUri = data.getData();
-
-            // Upload selected image
-            uploadImage();
+            if (postToEdit != null) {
+                uploadImage(postToEdit);
+            }
         }
     }
 
-    private void uploadImage() {
+    private void uploadImage(PostModel post) {
         if (selectedImageUri != null) {
             progressDialog = new ProgressDialog(getContext());
             progressDialog.setTitle("Uploading File...");
@@ -113,9 +123,8 @@ public class MyPostsFragment extends Fragment {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     String imageUrl = uri.toString();
-
-                                    // Update the selected post image
-                                    postAdapter.updateSelectedImageUri(selectedImageUri);
+                                    post.setImage(imageUrl);
+                                    updatePost(post);
                                     progressDialog.dismiss();
                                 }
                             });
@@ -129,6 +138,36 @@ public class MyPostsFragment extends Fragment {
                         }
                     });
         }
+    }
+
+    private void updatePost(PostModel post) {
+        db.collection("posts").document(post.getPostID())
+                .set(post)
+                .addOnSuccessListener(aVoid -> {
+                    db.collection("users").document(post.getOwnerID())
+                            .get()
+                            .addOnSuccessListener(documentSnapshot -> {
+                                if (documentSnapshot.exists()) {
+                                    UserModel user = documentSnapshot.toObject(UserModel.class);
+                                    if (user != null && user.getMyPosts() != null) {
+                                        for (PostModel userPost : user.getMyPosts()) {
+                                            if (userPost.getPostID().equals(post.getPostID())) {
+                                                userPost.setImage(post.getImage());
+                                                break;
+                                            }
+                                        }
+                                        db.collection("users").document(post.getOwnerID()).set(user, SetOptions.merge())
+                                                .addOnSuccessListener(aVoid1 -> {
+                                                    Toast.makeText(getContext(), "Post updated successfully", Toast.LENGTH_SHORT).show();
+                                                    loadUserPosts(); // Refresh the list
+                                                })
+                                                .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to update user posts", Toast.LENGTH_SHORT).show());
+                                    }
+                                }
+                            })
+                            .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to get user data", Toast.LENGTH_SHORT).show());
+                })
+                .addOnFailureListener(e -> Toast.makeText(getContext(), "Failed to update post", Toast.LENGTH_SHORT).show());
     }
 
     private String getFileExtension(Uri uri) {

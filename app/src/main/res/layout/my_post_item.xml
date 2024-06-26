@@ -25,7 +25,7 @@
                 android:id="@+id/profileImage"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/avatar1" /> <!-- Placeholder or default avatar -->
+                android:src="@drawable/avatar1" />
 
             <LinearLayout
                 android:layout_width="0dp"

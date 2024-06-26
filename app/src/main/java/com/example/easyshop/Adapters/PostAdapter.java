@@ -18,15 +18,16 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
 import com.example.easyshop.Fragments.PaymentFragment;
 import com.example.easyshop.Fragments.HomeFragment;
+import com.example.easyshop.Fragments.MyPostsFragment;
 import com.example.easyshop.Fragments.PostDetailsFragment;
 import com.example.easyshop.Model.PostModel;
 import com.example.easyshop.Model.UserModel;
 import com.example.easyshop.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
-import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -106,7 +107,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.itemLocationTextView.setText("Pickup address: " + post.getLocation());
 
         // Load post image
-        Picasso.get().load(post.getImage()).into(holder.itemImageView);
+        Glide.with(context).load(post.getImage()).into(holder.itemImageView);
 
         // Format and set timestamp
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy 'at' HH:mm", Locale.getDefault());
@@ -121,7 +122,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         if (user != null) {
                             holder.userNameTextView.setText(user.getName());
                             if (user.getProfilePicUrl() != null && !user.getProfilePicUrl().isEmpty()) {
-                                Picasso.get().load(user.getProfilePicUrl()).into(holder.profileImage);
+                                Glide.with(context).load(user.getProfilePicUrl()).into(holder.profileImage);
                             } else {
                                 holder.profileImage.setImageResource(R.drawable.avatar1); // Default avatar
                             }
@@ -210,7 +211,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.itemLocationTextView.setText("Pickup address: " + post.getLocation());
 
         // Load post image
-        Picasso.get().load(post.getImage()).into(holder.itemImageView);
+        Glide.with(context).load(post.getImage()).into(holder.itemImageView);
 
         // Format and set timestamp
         SimpleDateFormat sdf = new SimpleDateFormat("dd.M.yy 'at' HH:mm", Locale.getDefault());
@@ -225,7 +226,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         if (user != null) {
                             holder.userNameTextView.setText(user.getName());
                             if (user.getProfilePicUrl() != null && !user.getProfilePicUrl().isEmpty()) {
-                                Picasso.get().load(user.getProfilePicUrl()).into(holder.profileImage);
+                                Glide.with(context).load(user.getProfilePicUrl()).into(holder.profileImage);
                             } else {
                                 holder.profileImage.setImageResource(R.drawable.avatar1); // Default avatar
                             }
@@ -244,10 +245,13 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         });
 
         holder.editImageButton.setOnClickListener(v -> {
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            ((FragmentActivity) context).startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+            if (context instanceof FragmentActivity) {
+                FragmentActivity activity = (FragmentActivity) context;
+                MyPostsFragment fragment = (MyPostsFragment) activity.getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                if (fragment != null) {
+                    fragment.openFileChooser(post);
+                }
+            }
         });
 
         holder.saveButton.setOnClickListener(v -> {
@@ -285,7 +289,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                                         Toast.makeText(context, "Post updated successfully", Toast.LENGTH_SHORT).show();
                                                         FragmentActivity activity = (FragmentActivity) context;
                                                         FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
-                                                        transaction.replace(R.id.fragment_container, new HomeFragment());
+                                                        transaction.replace(R.id.fragment_container, new MyPostsFragment());
                                                         transaction.addToBackStack(null);
                                                         transaction.commit();
                                                     })
@@ -354,7 +358,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.itemLocationTextView.setText("Pickup address: " + post.getLocation());
 
         // Load post image
-        Picasso.get().load(post.getImage()).into(holder.itemImageView);
+        Glide.with(context).load(post.getImage()).into(holder.itemImageView);
 
         // Format and set timestamp
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy 'at' HH:mm", Locale.getDefault());
@@ -369,7 +373,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         if (user != null) {
                             holder.userNameTextView.setText(user.getName());
                             if (user.getProfilePicUrl() != null && !user.getProfilePicUrl().isEmpty()) {
-                                Picasso.get().load(user.getProfilePicUrl()).into(holder.profileImage);
+                                Glide.with(context).load(user.getProfilePicUrl()).into(holder.profileImage);
                             } else {
                                 holder.profileImage.setImageResource(R.drawable.avatar1); // Default avatar
                             }

@@ -92,4 +92,12 @@ public class UserModel {
     public void setMyOrders(List<PostModel> myOrders) {
         this.myOrders = (ArrayList<PostModel>) myOrders;
     }
+
+    public List<PostModel> getMyPosts() {
+        return myPosts;
+    }
+
+    public void setMyPosts(List<PostModel> myPosts) {
+        this.myPosts = (ArrayList<PostModel>) myPosts;
+    }
 }

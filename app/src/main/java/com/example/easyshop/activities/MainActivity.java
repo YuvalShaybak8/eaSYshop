@@ -3,12 +3,12 @@ package com.example.easyshop.activities;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.example.easyshop.Fragments.CreatePostFragment;
 import com.example.easyshop.Fragments.HomeFragment;
 import com.example.easyshop.Fragments.LoginFragment;
@@ -22,8 +22,6 @@ import com.example.easyshop.Utils.KeyboardUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -140,18 +138,7 @@ public class MainActivity extends AppCompatActivity {
                             if (user != null) {
                                 String profilePicUrl = user.getProfilePicUrl();
                                 if (profilePicUrl != null && !profilePicUrl.isEmpty()) {
-                                    Picasso.get().load(profilePicUrl).fit().centerInside().into(profilePic, new Callback() {
-                                        @Override
-                                        public void onSuccess() {
-                                            // Ensure the profile picture fits within the circle shape
-                                            profilePic.setBackgroundResource(R.drawable.circle_shape);
-                                        }
-
-                                        @Override
-                                        public void onError(Exception e) {
-                                            profilePic.setImageResource(R.drawable.avatar1); // default avatar
-                                        }
-                                    });
+                                    Glide.with(this).load(profilePicUrl).into(profilePic);
                                 } else {
                                     profilePic.setImageResource(R.drawable.avatar1); // default avatar
                                 }
@@ -161,6 +148,12 @@ public class MainActivity extends AppCompatActivity {
                     .addOnFailureListener(e -> {
                         // Handle any errors here
                     });
+        }
+    }
+
+    public void updateHeaderProfilePicture(String profilePicUrl) {
+        if (profilePicUrl != null && !profilePicUrl.isEmpty()) {
+            Glide.with(this).load(profilePicUrl).into(profilePic);
         }
     }
 

@@ -23,6 +23,12 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
+
+    buildFeatures{
+
+        viewBinding = true
+
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -40,6 +46,7 @@ dependencies {
     implementation(libs.room.common)
     implementation(libs.room.runtime)
     implementation(libs.swiperefreshlayout)
+    implementation(libs.firebase.storage)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -51,6 +58,7 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.storage)
 
     implementation(libs.picasso)
 
@@ -62,4 +70,8 @@ dependencies {
     annotationProcessor(libs.room.compiler)
 
     implementation(libs.bcrypt)
+
+    // Glide
+    implementation(libs.glide)
+    annotationProcessor(libs.glideCompiler)
 }

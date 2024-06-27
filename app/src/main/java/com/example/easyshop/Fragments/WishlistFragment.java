@@ -45,7 +45,6 @@ public class WishlistFragment extends Fragment {
 
         wishlist = new ArrayList<>();
 
-        // Get the current user ID
         currentUserID = mAuth.getCurrentUser().getUid();
 
         postAdapter = new PostAdapter(getContext(), wishlist, false, false, currentUserID); // Pass currentUserID to adapter
@@ -70,7 +69,6 @@ public class WishlistFragment extends Fragment {
                             postAdapter.notifyDataSetChanged();
                         }
                     } else {
-                        // Handle the error
                     }
                     if (swipeRefreshLayout != null) {
                         swipeRefreshLayout.setRefreshing(false);

@@ -17,7 +17,6 @@ public class PostModel {
     private String buyerID;
     private List<CommentModel> comments;
 
-    // No-argument constructor
     public PostModel() {
         comments = new ArrayList<>();
     }
@@ -36,7 +35,6 @@ public class PostModel {
         this.comments = comments;
     }
 
-    // Getter and Setter methods
     public String getPostID() {
         return postID;
     }

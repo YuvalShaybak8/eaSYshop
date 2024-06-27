@@ -64,12 +64,10 @@ public class PaymentFragment extends Fragment {
                 StringBuilder formatted = new StringBuilder(s.toString().replace("-", ""));
                 int hyphenCountAfter = countHyphens(formatted);
 
-                // Add hyphens
                 for (int i = 4; i < formatted.length(); i += 5) {
                     formatted.insert(i, "-");
                 }
 
-                // Set formatted text
                 cardNumber.setText(formatted.toString());
                 cardNumber.setSelection(formatted.length());
             }

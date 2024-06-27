@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.easyshop.Model.CommentModel;
 import com.example.easyshop.Model.PostModel;
@@ -51,6 +52,7 @@ public class PostDao extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        Log.d("PostDao", "Creating table: " + CREATE_TABLE);
         db.execSQL(CREATE_TABLE);
     }
 
@@ -75,7 +77,8 @@ public class PostDao extends SQLiteOpenHelper {
         values.put(COLUMN_BUYER_ID, post.getBuyerID());
         values.put(COLUMN_COMMENTS, commentsToString(post.getComments()));
 
-        db.insert(TABLE_POSTS, null, values);
+        long result = db.insert(TABLE_POSTS, null, values);
+        Log.d("PostDao", "Inserted post with ID: " + post.getPostID() + ", Result: " + result);
         db.close();
     }
 
@@ -113,6 +116,8 @@ public class PostDao extends SQLiteOpenHelper {
                 );
                 posts.add(post);
             } while (cursor.moveToNext());
+        } else {
+            Log.d("PostDao", "No posts found in the database.");
         }
         cursor.close();
         db.close();
@@ -149,5 +154,11 @@ public class PostDao extends SQLiteOpenHelper {
             }
         }
         return comments;
+    }
+
+    public void deleteAllPosts() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_POSTS);
+        db.close();
     }
 }

@@ -68,7 +68,6 @@ public class MyOrdersFragment extends Fragment {
                             postAdapter.notifyDataSetChanged();
                         }
                     } else {
-                        // Handle the error
                     }
                     swipeRefreshLayout.setRefreshing(false);
                 });

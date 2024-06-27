@@ -181,7 +181,7 @@ public class ProfileFragment extends Fragment {
 
     private void navigateToHome() {
         Intent intent = new Intent(getActivity(), MainActivity.class);
-        intent.putExtra("navigateTo", R.id.action_home); // pass the home action to navigate
+        intent.putExtra("navigateTo", R.id.action_home);
         startActivity(intent);
         getActivity().finish();
     }

@@ -20,7 +20,4 @@ public class PostRepository {
         return postDao.getAllPosts();
     }
 
-    public void deletePost(PostModel post) {
-        postDao.deletePost(post);
-    }
 }

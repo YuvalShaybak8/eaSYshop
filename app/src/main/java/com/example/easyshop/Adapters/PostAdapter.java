@@ -37,7 +37,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int VIEW_TYPE_HOME = 0;
     private static final int VIEW_TYPE_MY_POSTS = 1;
-    private static final int VIEW_TYPE_ORDERS = 2; // New view type for orders
+    private static final int VIEW_TYPE_ORDERS = 2;
 
     private static final int PICK_IMAGE_REQUEST = 71;
 
@@ -54,7 +54,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.postList = postList;
         this.db = FirebaseFirestore.getInstance();
         this.isMyPostsPage = isMyPostsPage;
-        this.isOrdersPage = isOrdersPage; // Initialize orders page boolean
+        this.isOrdersPage = isOrdersPage;
         this.currentUserID = currentUserID;
     }
 
@@ -106,15 +106,12 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.itemPriceTextView.setText("Price: $" + post.getPrice());
         holder.itemLocationTextView.setText("Pickup address: " + post.getLocation());
 
-        // Load post image
         Glide.with(context).load(post.getImage()).into(holder.itemImageView);
 
-        // Format and set timestamp
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy 'at' HH:mm", Locale.getDefault());
         String formattedDate = sdf.format(post.getTimestamp().toDate());
         holder.postTimestampTextView.setText(formattedDate);
 
-        // Fetch user details based on ownerID
         db.collection("users").document(post.getOwnerID()).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
@@ -130,16 +127,13 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     }
                 });
 
-        // Hide "Buy" button if the post belongs to the current user or is already purchased
         if (post.getOwnerID().equals(currentUserID)) {
             holder.buyButton.setVisibility(View.GONE);
         } else {
             holder.buyButton.setVisibility(View.VISIBLE);
         }
 
-        // Set click listener for the buy button
         holder.buyButton.setOnClickListener(v -> {
-            // Navigate to the PaymentFragment
             FragmentActivity activity = (FragmentActivity) context;
             FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_container, new PaymentFragment(post));
@@ -147,7 +141,6 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             transaction.commit();
         });
 
-        // Set click listener for the comment icon
         holder.commentIcon.setOnClickListener(v -> {
             FragmentActivity activity = (FragmentActivity) context;
             FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
@@ -156,7 +149,6 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             transaction.commit();
         });
 
-        // Set comment count visibility
         if (post.getComments().size() > 0) {
             holder.commentCount.setText(String.valueOf(post.getComments().size()));
             holder.commentCount.setVisibility(View.VISIBLE);
@@ -164,7 +156,6 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             holder.commentCount.setVisibility(View.GONE);
         }
 
-        // Set click listener for the wishlist icon
         db.collection("users").document(currentUserID).get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()) {
                 UserModel user = documentSnapshot.toObject(UserModel.class);
@@ -210,15 +201,12 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.itemPriceTextView.setText("Price: $" + post.getPrice());
         holder.itemLocationTextView.setText("Pickup address: " + post.getLocation());
 
-        // Load post image
         Glide.with(context).load(post.getImage()).into(holder.itemImageView);
 
-        // Format and set timestamp
         SimpleDateFormat sdf = new SimpleDateFormat("dd.M.yy 'at' HH:mm", Locale.getDefault());
         String formattedDate = sdf.format(post.getTimestamp().toDate());
         holder.postTimestampTextView.setText(formattedDate);
 
-        // Fetch user details based on ownerID
         db.collection("users").document(post.getOwnerID()).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
@@ -228,7 +216,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             if (user.getProfilePicUrl() != null && !user.getProfilePicUrl().isEmpty()) {
                                 Glide.with(context).load(user.getProfilePicUrl()).into(holder.profileImage);
                             } else {
-                                holder.profileImage.setImageResource(R.drawable.avatar1); // Default avatar
+                                holder.profileImage.setImageResource(R.drawable.avatar1);
                             }
                         }
                     }
@@ -357,15 +345,13 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.itemPriceTextView.setText("Price: $" + post.getPrice());
         holder.itemLocationTextView.setText("Pickup address: " + post.getLocation());
 
-        // Load post image
+
         Glide.with(context).load(post.getImage()).into(holder.itemImageView);
 
-        // Format and set timestamp
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy 'at' HH:mm", Locale.getDefault());
         String formattedDate = sdf.format(post.getTimestamp().toDate());
         holder.postTimestampTextView.setText(formattedDate);
 
-        // Fetch user details based on ownerID
         db.collection("users").document(post.getOwnerID()).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
@@ -375,7 +361,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             if (user.getProfilePicUrl() != null && !user.getProfilePicUrl().isEmpty()) {
                                 Glide.with(context).load(user.getProfilePicUrl()).into(holder.profileImage);
                             } else {
-                                holder.profileImage.setImageResource(R.drawable.avatar1); // Default avatar
+                                holder.profileImage.setImageResource(R.drawable.avatar1);
                             }
                         }
                     }
@@ -391,7 +377,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public void updateSelectedImageUri(Uri selectedImageUri) {
         this.selectedImageUri = selectedImageUri;
-        notifyDataSetChanged(); // Notify the adapter to refresh the views
+        notifyDataSetChanged();
     }
 
     public static class HomeViewHolder extends RecyclerView.ViewHolder {
@@ -423,7 +409,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         EditText editableTitleTextView, editableDescriptionTextView;
         Button editButton, deleteButton, saveButton;
         ImageButton editImageButton;
-        Uri selectedImageUri; // Add this line
+        Uri selectedImageUri;
 
         public MyPostsViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -444,7 +430,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    public static class OrdersViewHolder extends RecyclerView.ViewHolder { // New view holder for orders
+    public static class OrdersViewHolder extends RecyclerView.ViewHolder {
         ImageView profileImage, itemImageView;
         TextView userNameTextView, postTimestampTextView, itemTitleTextView, itemDescriptionTextView, itemPriceTextView, itemLocationTextView;
         Button purchasedButton;

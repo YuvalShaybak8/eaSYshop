@@ -55,14 +55,12 @@ public class RegisterFragment extends Fragment {
         registerButton.setOnClickListener(v -> registerUser());
 
         signInButton.setOnClickListener(v -> {
-            // Navigate back to LoginFragment
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new LoginFragment())
                     .addToBackStack(null)
                     .commit();
         });
 
-        // Set initial state and click listener for passwordToggle ImageButton
         passwordToggle.setOnClickListener(v -> togglePasswordVisibility());
 
         return view;
@@ -77,12 +75,10 @@ public class RegisterFragment extends Fragment {
             passwordToggle.setImageResource(R.drawable.ic_show_password);
         }
         isPasswordVisible = !isPasswordVisible;
-        // Move the cursor to the end of the input text
         passwordEditText.setSelection(passwordEditText.length());
     }
 
     private void registerUser() {
-        // Disable the register button and show the progress bar
         registerButton.setEnabled(false);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -92,7 +88,6 @@ public class RegisterFragment extends Fragment {
 
         if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
             Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
-            // Re-enable the register button and hide the progress bar
             registerButton.setEnabled(true);
             progressBar.setVisibility(View.GONE);
             return;
@@ -104,7 +99,7 @@ public class RegisterFragment extends Fragment {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         UserModel user = new UserModel(name, email, hashedPassword);
-                        user.setLoggedIn(true); // Set isLoggedIn to true
+                        user.setLoggedIn(true);
                         db.collection("users").document(mAuth.getCurrentUser().getUid())
                                 .set(user)
                                 .addOnSuccessListener(aVoid -> {
@@ -113,13 +108,11 @@ public class RegisterFragment extends Fragment {
                                 })
                                 .addOnFailureListener(e -> {
                                     Toast.makeText(getActivity(), "Failed to register user", Toast.LENGTH_SHORT).show();
-                                    // Re-enable the register button and hide the progress bar
                                     registerButton.setEnabled(true);
                                     progressBar.setVisibility(View.GONE);
                                 });
                     } else {
                         Toast.makeText(getActivity(), "Registration failed", Toast.LENGTH_SHORT).show();
-                        // Re-enable the register button and hide the progress bar
                         registerButton.setEnabled(true);
                         progressBar.setVisibility(View.GONE);
                     }
@@ -131,7 +124,6 @@ public class RegisterFragment extends Fragment {
                 .replace(R.id.fragment_container, new HomeFragment())
                 .commit();
 
-        // Notify MainActivity to update the UI
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).updateUIForFragment(new HomeFragment());
         }

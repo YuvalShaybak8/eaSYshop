@@ -59,7 +59,6 @@ public class CreatePostFragment extends Fragment {
     private ProgressDialog progressDialog;
 
     public CreatePostFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -74,10 +73,8 @@ public class CreatePostFragment extends Fragment {
         imageView1 = view.findViewById(R.id.createPostImage1);
         buttonCreatePost = view.findViewById(R.id.createPostSubmitButton);
 
-        // Initialize the Places API
         Places.initialize(requireContext(), "AIzaSyAE412NbG66NdE68Fap8_ncqt_crHnxYTE");
 
-        // Setup AutocompleteSupportFragment
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
@@ -91,7 +88,6 @@ public class CreatePostFragment extends Fragment {
 
             @Override
             public void onError(@NonNull Status status) {
-                // Handle error
                 Toast.makeText(getContext(), "Error: " + status.getStatusMessage(), Toast.LENGTH_SHORT).show();
             }
         });

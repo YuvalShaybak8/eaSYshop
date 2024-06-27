@@ -127,7 +127,6 @@ public class LoginFragment extends Fragment {
                 .replace(R.id.fragment_container, new HomeFragment())
                 .commit();
 
-        // Notify MainActivity to update the UI
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).updateUIForFragment(new HomeFragment());
         }

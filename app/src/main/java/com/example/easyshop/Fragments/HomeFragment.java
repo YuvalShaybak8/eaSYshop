@@ -44,7 +44,6 @@ public class HomeFragment extends Fragment {
 
         postList = new ArrayList<>();
 
-        // Get the current user ID
         currentUserID = mAuth.getCurrentUser().getUid();
 
         postAdapter = new PostAdapter(getContext(), postList, false, false, currentUserID);
@@ -67,12 +66,11 @@ public class HomeFragment extends Fragment {
                         postList.clear();
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             PostModel post = document.toObject(PostModel.class);
-                            post.setPostID(document.getId()); // Set postID if not already set
+                            post.setPostID(document.getId());
                             postList.add(post);
                         }
                         postAdapter.notifyDataSetChanged();
                     } else {
-                        // Handle the error
                     }
                     if (swipeRefreshLayout != null) {
                         swipeRefreshLayout.setRefreshing(false);

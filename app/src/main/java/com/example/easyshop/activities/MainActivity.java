@@ -159,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     })
                     .addOnFailureListener(e -> {
-                        // Handle any errors here
                     });
         }
     }
@@ -173,8 +172,8 @@ public class MainActivity extends AppCompatActivity {
     public void replaceFragment(Fragment fragment, boolean refresh) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null) // Add this line to add the transaction to the back stack
-                .commitAllowingStateLoss(); // Use commitAllowingStateLoss to avoid potential crashes due to state loss
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
 
         updateUIForFragment(fragment);
 
@@ -186,10 +185,10 @@ public class MainActivity extends AppCompatActivity {
     public void updateUIForFragment(Fragment fragment) {
         if (fragment instanceof LoginFragment || fragment instanceof RegisterFragment) {
             bottomNavigationView.setVisibility(View.GONE);
-            header.setVisibility(View.GONE); // Hide header
+            header.setVisibility(View.GONE);
         } else {
             bottomNavigationView.setVisibility(View.VISIBLE);
-            header.setVisibility(View.VISIBLE); // Show header
+            header.setVisibility(View.VISIBLE);
         }
     }
 
@@ -212,48 +211,30 @@ public class MainActivity extends AppCompatActivity {
         DatabaseHelper dbHelper = new DatabaseHelper(this);
         PostDao postDao = new PostDao(this);
 
-        // Create test data
-        List<CommentModel> comments = new ArrayList<>();
-        comments.add(new CommentModel("user1", "This is a comment", "post1"));
-
-        PostModel post = new PostModel(
-                "post1",
-                "Test Post",
-                "This is a test description",
-                "image_url",
-                100.0,
-                "Test Location",
-                "owner1",
-                new Timestamp(System.currentTimeMillis() / 1000, 0),
-                false,
-                null,
-                new ArrayList<>()
-        );
-
-        post.setComments(comments);
-
-        // Insert the test data
-        postDao.insertPost(post);
+        // Clear previous posts
+        postDao.deleteAllPosts();
 
         // Query the data
         List<PostModel> posts = postDao.getAllPosts();
 
-        // Log the results
-        for (PostModel p : posts) {
-            Log.d(TAG, "Post ID: " + p.getPostID());
-            Log.d(TAG, "Title: " + p.getTitle());
-            Log.d(TAG, "Description: " + p.getDescription());
-            Log.d(TAG, "Image: " + p.getImage());
-            Log.d(TAG, "Price: " + p.getPrice());
-            Log.d(TAG, "Location: " + p.getLocation());
-            Log.d(TAG, "Owner ID: " + p.getOwnerID());
-            Log.d(TAG, "Timestamp: " + p.getTimestamp().toDate().toString());
-            Log.d(TAG, "Purchased: " + p.isPurchased());
-            Log.d(TAG, "Buyer ID: " + p.getBuyerID());
-            for (CommentModel c : p.getComments()) {
-                Log.d(TAG, "Comment User ID: " + c.getUserID());
-                Log.d(TAG, "Comment Text: " + c.getCommentText());
+            Log.d(TAG, "Total Posts: " + posts.size());
+            // Log the results
+            for (PostModel p : posts) {
+                Log.d(TAG, "Post ID: " + p.getPostID());
+                Log.d(TAG, "Title: " + p.getTitle());
+                Log.d(TAG, "Description: " + p.getDescription());
+                Log.d(TAG, "Image: " + p.getImage());
+                Log.d(TAG, "Price: " + p.getPrice());
+                Log.d(TAG, "Location: " + p.getLocation());
+                Log.d(TAG, "Owner ID: " + p.getOwnerID());
+                Log.d(TAG, "Timestamp: " + p.getTimestamp().toDate().toString());
+                Log.d(TAG, "Purchased: " + p.isPurchased());
+                Log.d(TAG, "Buyer ID: " + p.getBuyerID());
+                for (CommentModel c : p.getComments()) {
+                    Log.d(TAG, "Comment User ID: " + c.getUserID());
+                    Log.d(TAG, "Comment Text: " + c.getCommentText());
             }
         }
     }
+
 }

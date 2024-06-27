@@ -40,7 +40,6 @@ public class UserModel {
         this.isLoggedIn = false;
     }
 
-    // Getters and setters for isLoggedIn
     public boolean isLoggedIn() {
         return isLoggedIn;
     }

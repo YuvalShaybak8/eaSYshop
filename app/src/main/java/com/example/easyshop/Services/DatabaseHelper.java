@@ -3,37 +3,25 @@ package com.example.easyshop.Services;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "posts.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
-    public static final String TABLE_POSTS = "posts";
-    public static final String COLUMN_ID = "id";
-    public static final String COLUMN_TITLE = "title";
-    public static final String COLUMN_DESCRIPTION = "description";
-    public static final String COLUMN_IMAGE = "image";
-    public static final String COLUMN_PRICE = "price";
-    public static final String COLUMN_LOCATION = "location";
-    public static final String COLUMN_OWNER_ID = "owner_id";
-    public static final String COLUMN_TIMESTAMP = "timestamp";
-    public static final String COLUMN_IS_PURCHASED = "is_purchased";
-    public static final String COLUMN_BUYER_ID = "buyer_id";
-    public static final String COLUMN_COMMENTS = "comments";
-
-    public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_POSTS + " ("
-            + COLUMN_ID + " TEXT PRIMARY KEY, "
-            + COLUMN_TITLE + " TEXT, "
-            + COLUMN_DESCRIPTION + " TEXT, "
-            + COLUMN_IMAGE + " TEXT, "
-            + COLUMN_PRICE + " REAL, "
-            + COLUMN_LOCATION + " TEXT, "
-            + COLUMN_OWNER_ID + " TEXT, "
-            + COLUMN_TIMESTAMP + " INTEGER, "
-            + COLUMN_IS_PURCHASED + " INTEGER, "
-            + COLUMN_BUYER_ID + " TEXT, "
-            + COLUMN_COMMENTS + " TEXT"
+    private static final String CREATE_TABLE = "CREATE TABLE " + PostDao.TABLE_POSTS + " ("
+            + PostDao.COLUMN_ID + " TEXT PRIMARY KEY, "
+            + PostDao.COLUMN_TITLE + " TEXT, "
+            + PostDao.COLUMN_DESCRIPTION + " TEXT, "
+            + PostDao.COLUMN_IMAGE + " TEXT, "
+            + PostDao.COLUMN_PRICE + " REAL, "
+            + PostDao.COLUMN_LOCATION + " TEXT, "
+            + PostDao.COLUMN_OWNER_ID + " TEXT, "
+            + PostDao.COLUMN_TIMESTAMP + " INTEGER, "
+            + PostDao.COLUMN_IS_PURCHASED + " INTEGER, "
+            + PostDao.COLUMN_BUYER_ID + " TEXT, "
+            + PostDao.COLUMN_COMMENTS + " TEXT"
             + ")";
 
     public DatabaseHelper(Context context) {
@@ -42,12 +30,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        Log.d("DatabaseHelper", "Creating table: " + CREATE_TABLE);
         db.execSQL(CREATE_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_POSTS);
+        db.execSQL("DROP TABLE IF EXISTS " + PostDao.TABLE_POSTS);
         onCreate(db);
     }
 }

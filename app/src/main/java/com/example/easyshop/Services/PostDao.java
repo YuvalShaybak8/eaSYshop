@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.example.easyshop.Model.CommentModel;
 import com.example.easyshop.Model.PostModel;
@@ -15,9 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PostDao extends SQLiteOpenHelper {
-
-    private static final String DATABASE_NAME = "posts.db";
-    private static final int DATABASE_VERSION = 1;
 
     public static final String TABLE_POSTS = "posts";
     public static final String COLUMN_ID = "id";
@@ -47,12 +43,11 @@ public class PostDao extends SQLiteOpenHelper {
             + ")";
 
     public PostDao(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, TABLE_POSTS, null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.d("PostDao", "Creating table: " + CREATE_TABLE);
         db.execSQL(CREATE_TABLE);
     }
 
@@ -77,8 +72,7 @@ public class PostDao extends SQLiteOpenHelper {
         values.put(COLUMN_BUYER_ID, post.getBuyerID());
         values.put(COLUMN_COMMENTS, commentsToString(post.getComments()));
 
-        long result = db.insert(TABLE_POSTS, null, values);
-        Log.d("PostDao", "Inserted post with ID: " + post.getPostID() + ", Result: " + result);
+        db.insert(TABLE_POSTS, null, values);
         db.close();
     }
 
@@ -116,17 +110,15 @@ public class PostDao extends SQLiteOpenHelper {
                 );
                 posts.add(post);
             } while (cursor.moveToNext());
-        } else {
-            Log.d("PostDao", "No posts found in the database.");
         }
         cursor.close();
         db.close();
         return posts;
     }
 
-    public void deletePost(PostModel post) {
+    public void deleteAllPosts() {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_POSTS, COLUMN_ID + " = ?", new String[]{post.getPostID()});
+        db.execSQL("DELETE FROM " + TABLE_POSTS);
         db.close();
     }
 
@@ -154,11 +146,5 @@ public class PostDao extends SQLiteOpenHelper {
             }
         }
         return comments;
-    }
-
-    public void deleteAllPosts() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DELETE FROM " + TABLE_POSTS);
-        db.close();
     }
 }

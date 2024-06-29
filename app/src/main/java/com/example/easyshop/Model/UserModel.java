@@ -40,6 +40,19 @@ public class UserModel {
         this.isLoggedIn = false;
     }
 
+    // Add the new constructor here
+    public UserModel(String userId, String name, String email, String password, String profilePicUrl) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.profilePicUrl = profilePicUrl;
+        this.myPosts = new ArrayList<>();
+        this.wishList = new ArrayList<>();
+        this.myOrders = new ArrayList<>();
+        this.comments = new ArrayList<>();
+        this.isLoggedIn = false;
+    }
+
     public boolean isLoggedIn() {
         return isLoggedIn;
     }

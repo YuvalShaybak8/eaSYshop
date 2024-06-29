@@ -25,6 +25,7 @@ swiperefreshlayout = "1.1.0"
 firebaseStorage = "21.0.0"
 glide = "4.12.0"
 roomKtx = "2.6.1"
+lifecycle = "2.3.1"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -64,6 +65,8 @@ glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "gl
 glideCompiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
 
+lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

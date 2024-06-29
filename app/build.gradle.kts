@@ -74,4 +74,8 @@ dependencies {
     // Glide
     implementation(libs.glide)
     annotationProcessor(libs.glideCompiler)
+
+    // lifecycle dependencies
+    implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.lifecycle.livedata.ktx)
 }

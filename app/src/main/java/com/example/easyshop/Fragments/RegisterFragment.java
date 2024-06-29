@@ -16,23 +16,20 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.example.easyshop.Model.UserModel;
 import com.example.easyshop.R;
+import com.example.easyshop.ViewModel.RegisterViewModel;
 import com.example.easyshop.activities.MainActivity;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import org.mindrot.jbcrypt.BCrypt;
 
 public class RegisterFragment extends Fragment {
 
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
-    private EditText nameEditText, emailEditText, passwordEditText;
+    private RegisterViewModel registerViewModel;
+    private EditText nameEditText;
+    private EditText emailEditText;
+    private EditText passwordEditText;
     private ImageButton passwordToggle;
     private boolean isPasswordVisible = false;
-
     private Button registerButton;
     private ProgressBar progressBar;
 
@@ -41,8 +38,7 @@ public class RegisterFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_register, container, false);
 
-        mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
+        registerViewModel = new ViewModelProvider(this).get(RegisterViewModel.class);
 
         nameEditText = view.findViewById(R.id.nameEditText);
         emailEditText = view.findViewById(R.id.emailEditText);
@@ -52,9 +48,17 @@ public class RegisterFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBar);
         passwordToggle = view.findViewById(R.id.passwordToggle);
 
-        registerButton.setOnClickListener(v -> registerUser());
+        registerButton.setOnClickListener(v -> {
+            String email = emailEditText.getText().toString();
+            String password = passwordEditText.getText().toString();
+            String username = nameEditText.getText().toString();
+            progressBar.setVisibility(View.VISIBLE);
+
+            registerViewModel.registerUser(email, password, username, getContext());
+        });
 
         signInButton.setOnClickListener(v -> {
+            // Navigate back to LoginFragment
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new LoginFragment())
                     .addToBackStack(null)
@@ -62,6 +66,15 @@ public class RegisterFragment extends Fragment {
         });
 
         passwordToggle.setOnClickListener(v -> togglePasswordVisibility());
+
+        registerViewModel.registerResult.observe(getViewLifecycleOwner(), isSuccess -> {
+            if (isSuccess) {
+                Toast.makeText(getActivity(), "Registration Successful", Toast.LENGTH_SHORT).show();
+                navigateToHomeFragment();
+            } else {
+                Toast.makeText(getActivity(), "Registration failed", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return view;
     }
@@ -75,48 +88,7 @@ public class RegisterFragment extends Fragment {
             passwordToggle.setImageResource(R.drawable.ic_show_password);
         }
         isPasswordVisible = !isPasswordVisible;
-        passwordEditText.setSelection(passwordEditText.length());
-    }
-
-    private void registerUser() {
-        registerButton.setEnabled(false);
-        progressBar.setVisibility(View.VISIBLE);
-
-        String name = nameEditText.getText().toString().trim();
-        String email = emailEditText.getText().toString().trim();
-        String password = passwordEditText.getText().toString().trim();
-
-        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
-            Toast.makeText(getActivity(), "All fields are required", Toast.LENGTH_SHORT).show();
-            registerButton.setEnabled(true);
-            progressBar.setVisibility(View.GONE);
-            return;
-        }
-
-        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        UserModel user = new UserModel(name, email, hashedPassword);
-                        user.setLoggedIn(true);
-                        db.collection("users").document(mAuth.getCurrentUser().getUid())
-                                .set(user)
-                                .addOnSuccessListener(aVoid -> {
-                                    Toast.makeText(getActivity(), "User registered successfully", Toast.LENGTH_SHORT).show();
-                                    navigateToHomeFragment();
-                                })
-                                .addOnFailureListener(e -> {
-                                    Toast.makeText(getActivity(), "Failed to register user", Toast.LENGTH_SHORT).show();
-                                    registerButton.setEnabled(true);
-                                    progressBar.setVisibility(View.GONE);
-                                });
-                    } else {
-                        Toast.makeText(getActivity(), "Registration failed", Toast.LENGTH_SHORT).show();
-                        registerButton.setEnabled(true);
-                        progressBar.setVisibility(View.GONE);
-                    }
-                });
+        passwordEditText.setSelection(passwordEditText.getText().length());
     }
 
     private void navigateToHomeFragment() {

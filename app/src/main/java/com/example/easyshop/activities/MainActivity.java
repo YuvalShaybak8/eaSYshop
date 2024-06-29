@@ -27,6 +27,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,32 @@ public class MainActivity extends AppCompatActivity {
     private String loggedInUserID;
 
     private static final String TAG = "MainActivity";
+
+    public void updateHeaderProfilePicture() {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        if (mAuth.getCurrentUser() != null) {
+            String loggedInUserID = mAuth.getCurrentUser().getUid();
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("users").document(loggedInUserID)
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            UserModel user = documentSnapshot.toObject(UserModel.class);
+                            if (user != null) {
+                                String profilePicUrl = user.getProfilePicUrl();
+                                if (profilePicUrl != null && !profilePicUrl.isEmpty()) {
+                                    Glide.with(this).load(profilePicUrl).into(profilePic);
+                                } else {
+                                    profilePic.setImageResource(R.drawable.avatar1); // default avatar
+                                }
+                            }
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        // Handle any errors here
+                    });
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Set profile picture
         loadUserProfile();
+
+        updateHeaderProfilePicture();
 
         profilePic.setOnClickListener(v -> {
             // Handle profile picture click to navigate to profile details
@@ -159,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     })
                     .addOnFailureListener(e -> {
+                        // Handle any errors here
                     });
         }
     }
@@ -172,8 +202,8 @@ public class MainActivity extends AppCompatActivity {
     public void replaceFragment(Fragment fragment, boolean refresh) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commitAllowingStateLoss();
+                .addToBackStack(null) // Add this line to add the transaction to the back stack
+                .commitAllowingStateLoss(); // Use commitAllowingStateLoss to avoid potential crashes due to state loss
 
         updateUIForFragment(fragment);
 
@@ -185,10 +215,10 @@ public class MainActivity extends AppCompatActivity {
     public void updateUIForFragment(Fragment fragment) {
         if (fragment instanceof LoginFragment || fragment instanceof RegisterFragment) {
             bottomNavigationView.setVisibility(View.GONE);
-            header.setVisibility(View.GONE);
+            header.setVisibility(View.GONE); // Hide header
         } else {
             bottomNavigationView.setVisibility(View.VISIBLE);
-            header.setVisibility(View.VISIBLE);
+            header.setVisibility(View.VISIBLE); // Show header
         }
     }
 
@@ -211,30 +241,48 @@ public class MainActivity extends AppCompatActivity {
         DatabaseHelper dbHelper = new DatabaseHelper(this);
         PostDao postDao = new PostDao(this);
 
-        // Clear previous posts
-        postDao.deleteAllPosts();
+        // Delete all posts (uncomment if needed for testing)
+        // postDao.deleteAllPosts();
+
+        // Add posts from Firestore to SQLite
+        addPostsFromFirestoreToSQLite(postDao);
 
         // Query the data
         List<PostModel> posts = postDao.getAllPosts();
 
-            Log.d(TAG, "Total Posts: " + posts.size());
-            // Log the results
-            for (PostModel p : posts) {
-                Log.d(TAG, "Post ID: " + p.getPostID());
-                Log.d(TAG, "Title: " + p.getTitle());
-                Log.d(TAG, "Description: " + p.getDescription());
-                Log.d(TAG, "Image: " + p.getImage());
-                Log.d(TAG, "Price: " + p.getPrice());
-                Log.d(TAG, "Location: " + p.getLocation());
-                Log.d(TAG, "Owner ID: " + p.getOwnerID());
-                Log.d(TAG, "Timestamp: " + p.getTimestamp().toDate().toString());
-                Log.d(TAG, "Purchased: " + p.isPurchased());
-                Log.d(TAG, "Buyer ID: " + p.getBuyerID());
-                for (CommentModel c : p.getComments()) {
-                    Log.d(TAG, "Comment User ID: " + c.getUserID());
-                    Log.d(TAG, "Comment Text: " + c.getCommentText());
+        // Log the results
+        Log.d(TAG, "Total Posts: " + posts.size());
+        for (PostModel p : posts) {
+            Log.d(TAG, "Post ID: " + p.getPostID());
+            Log.d(TAG, "Title: " + p.getTitle());
+            Log.d(TAG, "Description: " + p.getDescription());
+            Log.d(TAG, "Image: " + p.getImage());
+            Log.d(TAG, "Price: " + p.getPrice());
+            Log.d(TAG, "Location: " + p.getLocation());
+            Log.d(TAG, "Owner ID: " + p.getOwnerID());
+            Log.d(TAG, "Timestamp: " + p.getTimestamp().toDate().toString());
+            Log.d(TAG, "Purchased: " + p.isPurchased());
+            Log.d(TAG, "Buyer ID: " + p.getBuyerID());
+            for (CommentModel c : p.getComments()) {
+                Log.d(TAG, "Comment User ID: " + c.getUserID());
+                Log.d(TAG, "Comment Text: " + c.getCommentText());
             }
         }
     }
 
+    private void addPostsFromFirestoreToSQLite(PostDao postDao) {
+        db.collection("posts").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    PostModel post = document.toObject(PostModel.class);
+                    post.setPostID(document.getId()); // Ensure the PostID is set
+                    postDao.insertPost(post);
+                }
+                Log.d(TAG, "All posts from Firestore have been added to SQLite.");
+                Log.d(TAG, "Total Posts: " + postDao);
+            } else {
+                Log.d(TAG, "Error getting posts from Firestore: ", task.getException());
+            }
+        });
+    }
 }

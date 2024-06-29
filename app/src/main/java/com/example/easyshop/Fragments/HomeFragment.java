@@ -54,7 +54,7 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    public void loadPosts() {
+     public void loadPosts() {
         if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setRefreshing(true);
         }

@@ -53,7 +53,6 @@ public class PaymentFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // Prevent infinite loop
                 if (isFormatting) {
                     isFormatting = false;
                     return;
@@ -87,17 +86,38 @@ public class PaymentFragment extends Fragment {
         });
 
         expiryDate.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            private boolean isFormatting;
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (isFormatting) {
+                    return;
+                }
+
+                isFormatting = true;
+                String input = s.toString();
+                String formatted = input;
+
+                if (input.length() == 2 && before == 0) {
+                    formatted += "/";
+                } else if (input.length() == 2 && before == 1 && input.charAt(1) != '/') {
+                    formatted = input.charAt(0) + "/" + input.charAt(1);
+                }
+
+                if (!formatted.equals(input)) {
+                    expiryDate.setText(formatted);
+                    expiryDate.setSelection(formatted.length());
+                }
+
+                isFormatting = false;
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() == 2 && !s.toString().contains("/")) {
-                    s.append("/");
-                }
             }
         });
 

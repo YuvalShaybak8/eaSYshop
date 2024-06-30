@@ -76,7 +76,7 @@ public class PostDetailsFragment extends Fragment {
                             if (user.getProfilePicUrl() != null && !user.getProfilePicUrl().isEmpty()) {
                                 Picasso.get().load(user.getProfilePicUrl()).into(profileImage);
                             } else {
-                                profileImage.setImageResource(R.drawable.avatar1); // Default avatar
+                                profileImage.setImageResource(R.drawable.avatar1);
                             }
                         }
                     }

@@ -58,7 +58,6 @@ public class RegisterFragment extends Fragment {
         });
 
         signInButton.setOnClickListener(v -> {
-            // Navigate back to LoginFragment
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new LoginFragment())
                     .addToBackStack(null)

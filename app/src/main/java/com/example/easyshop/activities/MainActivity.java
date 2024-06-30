@@ -62,13 +62,12 @@ public class MainActivity extends AppCompatActivity {
                                 if (profilePicUrl != null && !profilePicUrl.isEmpty()) {
                                     Glide.with(this).load(profilePicUrl).into(profilePic);
                                 } else {
-                                    profilePic.setImageResource(R.drawable.avatar1); // default avatar
+                                    profilePic.setImageResource(R.drawable.avatar1);
                                 }
                             }
                         }
                     })
                     .addOnFailureListener(e -> {
-                        // Handle any errors here
                     });
         }
     }
@@ -78,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialize Firestore and Auth
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
 
@@ -92,17 +90,14 @@ public class MainActivity extends AppCompatActivity {
             checkLoginStatus();
         }
 
-        // Set profile picture
         loadUserProfile();
 
         updateHeaderProfilePicture();
 
         profilePic.setOnClickListener(v -> {
-            // Handle profile picture click to navigate to profile details
             replaceFragment(new ProfileFragment(), false);
         });
 
-        // Handle bottom navigation item selection
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (itemId == R.id.action_home) {
@@ -121,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Add a fragment transaction listener to update the UI when the fragment changes
         getSupportFragmentManager().addOnBackStackChangedListener(() -> {
             Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
             if (currentFragment != null) {
@@ -129,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Keyboard visibility listener
         KeyboardUtils.setKeyboardVisibilityListener(this, isVisible -> {
             Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
             if (currentFragment instanceof LoginFragment || currentFragment instanceof RegisterFragment) {
@@ -182,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
                                 if (profilePicUrl != null && !profilePicUrl.isEmpty()) {
                                     Glide.with(this).load(profilePicUrl).into(profilePic);
                                 } else {
-                                    profilePic.setImageResource(R.drawable.avatar1); // default avatar
+                                    profilePic.setImageResource(R.drawable.avatar1);
                                 }
                             }
                         }
@@ -202,8 +195,8 @@ public class MainActivity extends AppCompatActivity {
     public void replaceFragment(Fragment fragment, boolean refresh) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null) // Add this line to add the transaction to the back stack
-                .commitAllowingStateLoss(); // Use commitAllowingStateLoss to avoid potential crashes due to state loss
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
 
         updateUIForFragment(fragment);
 
@@ -244,13 +237,10 @@ public class MainActivity extends AppCompatActivity {
         // Delete all posts (uncomment if needed for testing)
         // postDao.deleteAllPosts();
 
-        // Add posts from Firestore to SQLite
         addPostsFromFirestoreToSQLite(postDao);
 
-        // Query the data
         List<PostModel> posts = postDao.getAllPosts();
 
-        // Log the results
         Log.d(TAG, "Total Posts: " + posts.size());
         for (PostModel p : posts) {
             Log.d(TAG, "Post ID: " + p.getPostID());
@@ -275,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     PostModel post = document.toObject(PostModel.class);
-                    post.setPostID(document.getId()); // Ensure the PostID is set
+                    post.setPostID(document.getId());
                     postDao.insertPost(post);
                 }
                 Log.d(TAG, "All posts from Firestore have been added to SQLite.");

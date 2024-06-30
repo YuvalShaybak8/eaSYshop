@@ -49,7 +49,6 @@ public class RegisterViewModel extends ViewModel {
                 String userId = firebaseAuth.getCurrentUser().getUid();
                 StorageReference storageRef = storage.getReference().child("profile_pictures").child(userId + ".jpg");
 
-                // Convert drawable to byte array
                 Bitmap bitmap = ((BitmapDrawable) context.getResources().getDrawable(R.drawable.avatar1)).getBitmap();
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);

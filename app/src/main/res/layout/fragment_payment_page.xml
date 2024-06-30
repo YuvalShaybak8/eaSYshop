@@ -67,7 +67,7 @@
             android:background="@drawable/edit_text_background2"
             android:padding="8dp"
             android:maxLength="5"
-            android:inputType="number" /> <!-- Set inputType to number -->
+            android:inputType="number" />
 
         <EditText
             android:id="@+id/cvvEditText"
@@ -79,7 +79,7 @@
             android:padding="8dp"
             android:maxLength="3"
             android:layout_marginStart="16dp"
-            android:inputType="number" /> <!-- Set inputType to number -->
+            android:inputType="number" />
     </LinearLayout>
 
     <Button

@@ -59,7 +59,7 @@ public class HomeFragment extends Fragment {
             swipeRefreshLayout.setRefreshing(true);
         }
         fs.collection("posts")
-                .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING) // Order by timestamp descending
+                .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {

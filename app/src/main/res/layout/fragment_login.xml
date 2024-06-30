@@ -16,7 +16,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Spacer to lower all elements on the screen -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="50dp" />

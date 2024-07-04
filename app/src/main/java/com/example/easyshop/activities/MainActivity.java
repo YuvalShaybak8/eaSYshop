@@ -181,7 +181,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     })
                     .addOnFailureListener(e -> {
-                        // Handle any errors here
                     });
         }
     }
@@ -208,10 +207,10 @@ public class MainActivity extends AppCompatActivity {
     public void updateUIForFragment(Fragment fragment) {
         if (fragment instanceof LoginFragment || fragment instanceof RegisterFragment) {
             bottomNavigationView.setVisibility(View.GONE);
-            header.setVisibility(View.GONE); // Hide header
+            header.setVisibility(View.GONE);
         } else {
             bottomNavigationView.setVisibility(View.VISIBLE);
-            header.setVisibility(View.VISIBLE); // Show header
+            header.setVisibility(View.VISIBLE);
         }
     }
 

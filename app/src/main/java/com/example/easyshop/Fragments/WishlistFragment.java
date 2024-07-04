@@ -66,9 +66,11 @@ public class WishlistFragment extends Fragment {
                         if (user != null) {
                             wishlist.clear();
                             wishlist.addAll(user.getWishList());
+                            wishlist.sort((p1, p2) -> p2.getTimestamp().compareTo(p1.getTimestamp()));
                             postAdapter.notifyDataSetChanged();
                         }
                     } else {
+
                     }
                     if (swipeRefreshLayout != null) {
                         swipeRefreshLayout.setRefreshing(false);

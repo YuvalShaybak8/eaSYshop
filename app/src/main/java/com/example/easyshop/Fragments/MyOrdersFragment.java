@@ -65,6 +65,7 @@ public class MyOrdersFragment extends Fragment {
                         if (user != null) {
                             postList.clear();
                             postList.addAll(user.getMyOrders());
+                            postList.sort((p1, p2) -> p2.getTimestamp().compareTo(p1.getTimestamp()));
                             postAdapter.notifyDataSetChanged();
                         }
                     } else {

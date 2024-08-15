@@ -38,28 +38,29 @@
 Here are some screenshots of the eaSYshop app in action:
 
 1. **Home Screen**  
-   ![HomePage](https://github.com/user-attachments/assets/b704f2e7-1eaf-41b1-9c59-e6140515c45f)
+   <img src="https://github.com/user-attachments/assets/b704f2e7-1eaf-41b1-9c59-e6140515c45f" width="300">
 
 2. **Login Page**  
-   ![LoginPage](https://github.com/user-attachments/assets/2adbc90a-f2b4-401e-a525-7010bfa569e7)
+   <img src="https://github.com/user-attachments/assets/2adbc90a-f2b4-401e-a525-7010bfa569e7" width="300">
 
 3. **Register Page**  
-   ![RegisterPage](https://github.com/user-attachments/assets/88383f1e-e696-4b48-88b4-e2db096125aa)
+   <img src="https://github.com/user-attachments/assets/88383f1e-e696-4b48-88b4-e2db096125aa" width="300">
 
 4. **Menu Action**  
-   ![MenuAction](https://github.com/user-attachments/assets/3894f672-1478-49b8-b373-c2546d2e7c81)
+   <img src="https://github.com/user-attachments/assets/3894f672-1478-49b8-b373-c2546d2e7c81" width="300">
 
 5. **Profile Management**  
-   ![MyProfile](https://github.com/user-attachments/assets/dd23d8e5-de4e-4072-bc85-2ab7351afe9a)
+   <img src="https://github.com/user-attachments/assets/dd23d8e5-de4e-4072-bc85-2ab7351afe9a" width="300">
    
-6. **Payment Page** 
-   ![PaymentPage](https://github.com/user-attachments/assets/216784b4-c796-49c3-8fd5-38d8cb4d75b8)
+6. **Payment Page**  
+   <img src="https://github.com/user-attachments/assets/216784b4-c796-49c3-8fd5-38d8cb4d75b8" width="300">
    
-7. **My Wishlist**
-   ![MyWishlist](https://github.com/user-attachments/assets/e92996f7-7d2f-45e4-b01f-27955fc38708)
+7. **My Wishlist**  
+   <img src="https://github.com/user-attachments/assets/e92996f7-7d2f-45e4-b01f-27955fc38708" width="300">
    
-8. **Create Post Page**
-   ![CreatePost](https://github.com/user-attachments/assets/69abe048-5d8a-476d-9aa7-3fc41a28f37f)
+8. **Create Post Page**  
+   <img src="https://github.com/user-attachments/assets/69abe048-5d8a-476d-9aa7-3fc41a28f37f" width="300">
+
 
 ## Demo
 

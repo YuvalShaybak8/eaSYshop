@@ -66,7 +66,7 @@ Here are some screenshots of the eaSYshop app in action:
 
 Check out this video to see eaSYshop in action:
 
-[[![eaSYshop Demo](./path_to_your_video_thumbnail_here)](./path_to_your_video_here)](https://github.com/user-attachments/assets/51c8b59c-7acd-4b05-ba3e-bf6a9f173047)
+https://github.com/user-attachments/assets/bc12d503-037a-49ac-b3fa-26f78e9e4fda
 
 ## Installation
 
